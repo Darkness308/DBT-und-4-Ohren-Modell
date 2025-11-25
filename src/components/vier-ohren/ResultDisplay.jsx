@@ -3,9 +3,17 @@
  */
 
 import { vierOhrenDescriptions } from '../../data/vierOhrenExamples'
+import RelatedSkills from '../common/RelatedSkills'
 
 export default function ResultDisplay({ analysis }) {
   const levels = ['sachebene', 'selbstoffenbarung', 'beziehungsebene', 'appellseite']
+
+  // Kontext für Skill-Empfehlungen zusammenstellen
+  const skillContext = [
+    analysis.originalStatement,
+    analysis.context,
+    'kommunikation'
+  ].filter(Boolean).join(' ')
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -39,6 +47,9 @@ export default function ResultDisplay({ analysis }) {
       {analysis.suggestions && analysis.suggestions.length > 0 && (
         <SuggestionsCard suggestions={analysis.suggestions} />
       )}
+
+      {/* Cross-Verlinkung zu passenden Skills */}
+      <RelatedSkills context={skillContext} maxItems={3} />
 
       {/* Hinweis bei generischer Analyse */}
       {analysis.note && (

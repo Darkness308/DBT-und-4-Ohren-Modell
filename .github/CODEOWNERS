@@ -1,0 +1,22 @@
+# Code Owners für DBT & Vier-Ohren App
+# Diese Datei definiert, wer für welche Bereiche verantwortlich ist
+
+# Projekt-Root
+* @Darkness308
+
+# Dokumentation
+/docs/ @Darkness308
+CLAUDE.md @Darkness308
+README.md @Darkness308
+
+# Agents (Business Logic)
+/src/agents/ @Darkness308
+
+# UI Components
+/src/components/ @Darkness308
+
+# Daten
+/src/data/ @Darkness308
+
+# Konfiguration
+/*.config.js @Darkness308
