@@ -1,0 +1,39 @@
+{
+  "name": "dbt-vier-ohren-app",
+  "version": "0.1.0",
+  "description": "Therapeutische Web-App: DBT-Skills & Vier-Ohren-Modell",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext js,jsx",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.10.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "vite": "^5.0.6",
+    "vitest": "^1.0.4"
+  },
+  "keywords": [
+    "dbt",
+    "therapy",
+    "mental-health",
+    "vier-ohren-modell",
+    "schulz-von-thun",
+    "skills-training"
+  ],
+  "author": "",
+  "license": "MIT"
+}
