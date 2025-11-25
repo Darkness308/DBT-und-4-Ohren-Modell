@@ -4,10 +4,10 @@
  */
 
 const navItems = [
+  { id: 'home', icon: '🏠', label: 'Home' },
   { id: 'vier-ohren', icon: '👂', label: 'Vier Ohren' },
   { id: 'skills', icon: '🧰', label: 'Skills' },
   { id: 'diary', icon: '📊', label: 'Diary' },
-  { id: 'chain', icon: '🔗', label: 'Chain' },
 ]
 
 export default function Navigation({ activeModule, onNavigate }) {

@@ -1,14 +1,16 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
 import { eventBus } from './utils/eventBus'
 import Navigation from './components/common/Navigation'
+import ErrorBoundary from './components/common/ErrorBoundary'
 import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
 import SkillFinder from './components/skill-finder/SkillFinder'
+import Dashboard from './components/dashboard/Dashboard'
 
 // App Context
 const AppContext = createContext(null)
 
 const initialState = {
-  activeModule: 'vier-ohren',
+  activeModule: 'home',
   user: {
     name: null,
     settings: {
@@ -82,6 +84,8 @@ export function App() {
 
   const renderModule = () => {
     switch (state.activeModule) {
+      case 'home':
+        return <Dashboard />
       case 'vier-ohren':
         return <VierOhrenAnalyzer />
       case 'skills':
@@ -91,9 +95,29 @@ export function App() {
       case 'chain':
         return <ComingSoon title="Chain Analysis" icon="🔗" />
       default:
-        return <VierOhrenAnalyzer />
+        return <Dashboard />
     }
   }
+
+  // Dynamischer Header-Titel
+  const getHeaderInfo = () => {
+    switch (state.activeModule) {
+      case 'home':
+        return { title: 'DBT Skills & Vier-Ohren', subtitle: 'Dein Dashboard' }
+      case 'vier-ohren':
+        return { title: 'Vier-Ohren-Modell', subtitle: 'Kommunikation verstehen' }
+      case 'skills':
+        return { title: 'Skill-Finder', subtitle: 'DBT-Skills entdecken' }
+      case 'diary':
+        return { title: 'Diary Card', subtitle: 'Emotionen tracken' }
+      case 'chain':
+        return { title: 'Chain Analysis', subtitle: 'Verhalten verstehen' }
+      default:
+        return { title: 'DBT Skills & Vier-Ohren', subtitle: 'Werkzeuge für dich' }
+    }
+  }
+
+  const headerInfo = getHeaderInfo()
 
   return (
     <AppContext.Provider value={{ state, dispatch, navigate }}>
@@ -101,16 +125,18 @@ export function App() {
         {/* Header */}
         <header className="gradient-calm text-white p-6 shadow-lg">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold">DBT Skills & Vier-Ohren-Modell</h1>
+            <h1 className="text-2xl font-bold">{headerInfo.title}</h1>
             <p className="text-white/80 text-sm mt-1">
-              Werkzeuge für Emotionsregulation und Kommunikation
+              {headerInfo.subtitle}
             </p>
           </div>
         </header>
 
-        {/* Main Content */}
+        {/* Main Content mit Error Boundary */}
         <main className="max-w-4xl mx-auto p-4 mt-4">
-          {renderModule()}
+          <ErrorBoundary>
+            {renderModule()}
+          </ErrorBoundary>
         </main>
 
         {/* Navigation */}
@@ -126,7 +152,11 @@ function ComingSoon({ title, icon }) {
     <div className="bg-white rounded-xl shadow-md p-8 text-center animate-fade-in">
       <span className="text-6xl mb-4 block">{icon}</span>
       <h2 className="text-2xl font-semibold text-gray-800 mb-2">{title}</h2>
-      <p className="text-gray-500">Dieses Modul wird bald verfügbar sein.</p>
+      <p className="text-gray-500 mb-4">Dieses Modul wird bald verfügbar sein.</p>
+      <div className="inline-flex items-center gap-2 px-4 py-2 bg-calm-50 text-calm-700 rounded-full text-sm">
+        <span className="animate-pulse">🔨</span>
+        <span>In Entwicklung</span>
+      </div>
     </div>
   )
 }
