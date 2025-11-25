@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer, useEffect } from 'react'
 import { eventBus } from './utils/eventBus'
 import Navigation from './components/common/Navigation'
 import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
+import SkillFinder from './components/skill-finder/SkillFinder'
 
 // App Context
 const AppContext = createContext(null)
@@ -84,7 +85,7 @@ export function App() {
       case 'vier-ohren':
         return <VierOhrenAnalyzer />
       case 'skills':
-        return <ComingSoon title="Skill-Finder" icon="🧰" />
+        return <SkillFinder />
       case 'diary':
         return <ComingSoon title="Diary Card" icon="📊" />
       case 'chain':
