@@ -99,7 +99,7 @@ export default function Button({
 }
 
 // Icon-only Button
-export function IconButton({ icon, label, onClick, variant = 'ghost', size = 'md' }) {
+export function IconButton({ icon, label, onClick, variant: _variant = 'ghost', size = 'md' }) {
   const sizes = {
     sm: 'w-8 h-8 text-lg',
     md: 'w-10 h-10 text-xl',
