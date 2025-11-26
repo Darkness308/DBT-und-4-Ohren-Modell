@@ -41,7 +41,7 @@ function ExampleCard({ example, onClick }) {
       className="w-full text-left p-4 rounded-xl border border-gray-200 hover:border-calm-300 hover:bg-calm-50 transition-all duration-200 group"
     >
       <p className="font-medium text-gray-800 group-hover:text-calm-700">
-        "{example.statement}"
+        &ldquo;{example.statement}&rdquo;
       </p>
       <p className="text-sm text-gray-500 mt-1">
         {example.context}

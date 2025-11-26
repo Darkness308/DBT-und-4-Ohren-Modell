@@ -62,7 +62,7 @@ export default function RelatedSkills({ context, maxItems = 3 }) {
     return null
   }
 
-  const handleSkillClick = (skillId) => {
+  const handleSkillClick = (_skillId) => {
     // Navigiere zum Skill-Finder mit vorausgewähltem Skill
     navigate('skills')
     // Könnte erweitert werden um den Skill direkt zu öffnen
