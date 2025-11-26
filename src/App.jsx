@@ -1,10 +1,13 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
 import { eventBus } from './utils/eventBus'
+import { useTheme } from './contexts/ThemeContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
+import PWAManager from './components/pwa/PWAManager'
 import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
 import SkillFinder from './components/skill-finder/SkillFinder'
 import Dashboard from './components/dashboard/Dashboard'
+import Settings from './components/settings/Settings'
 
 // App Context
 const AppContext = createContext(null)
@@ -14,14 +17,13 @@ const initialState = {
   user: {
     name: null,
     settings: {
-      theme: 'light',
       reducedMotion: false,
-      fontSize: 'normal'
-    }
+      fontSize: 'normal',
+    },
   },
   diaryData: [],
   chainAnalyses: [],
-  skillHistory: []
+  skillHistory: [],
 }
 
 function appReducer(state, action) {
@@ -31,7 +33,7 @@ function appReducer(state, action) {
     case 'UPDATE_SETTINGS':
       return {
         ...state,
-        user: { ...state.user, settings: { ...state.user.settings, ...action.payload } }
+        user: { ...state.user, settings: { ...state.user.settings, ...action.payload } },
       }
     case 'ADD_DIARY_ENTRY':
       return { ...state, diaryData: [...state.diaryData, action.payload] }
@@ -48,6 +50,7 @@ function appReducer(state, action) {
 
 export function App() {
   const [state, dispatch] = useReducer(appReducer, initialState)
+  const { isDark, toggleTheme } = useTheme()
 
   // Persistenz laden
   useEffect(() => {
@@ -70,7 +73,10 @@ export function App() {
   // Event-Bus Listener
   useEffect(() => {
     const unsubscribeSkill = eventBus.on('skill:used', (data) => {
-      dispatch({ type: 'ADD_SKILL_USAGE', payload: { ...data, timestamp: new Date().toISOString() } })
+      dispatch({
+        type: 'ADD_SKILL_USAGE',
+        payload: { ...data, timestamp: new Date().toISOString() },
+      })
     })
 
     return () => {
@@ -90,6 +96,8 @@ export function App() {
         return <VierOhrenAnalyzer />
       case 'skills':
         return <SkillFinder />
+      case 'settings':
+        return <Settings />
       case 'diary':
         return <ComingSoon title="Diary Card" icon="📊" />
       case 'chain':
@@ -108,6 +116,8 @@ export function App() {
         return { title: 'Vier-Ohren-Modell', subtitle: 'Kommunikation verstehen' }
       case 'skills':
         return { title: 'Skill-Finder', subtitle: 'DBT-Skills entdecken' }
+      case 'settings':
+        return { title: 'Einstellungen', subtitle: 'Design & Daten' }
       case 'diary':
         return { title: 'Diary Card', subtitle: 'Emotionen tracken' }
       case 'chain':
@@ -121,22 +131,32 @@ export function App() {
 
   return (
     <AppContext.Provider value={{ state, dispatch, navigate }}>
-      <div className="min-h-screen gradient-subtle pb-20">
+      <PWAManager />
+      <div
+        className={`min-h-screen pb-20 transition-theme ${isDark ? 'bg-dark-bg' : 'gradient-subtle'}`}
+      >
         {/* Header */}
-        <header className="gradient-calm text-white p-6 shadow-lg">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold">{headerInfo.title}</h1>
-            <p className="text-white/80 text-sm mt-1">
-              {headerInfo.subtitle}
-            </p>
+        <header className="gradient-calm text-white p-6 shadow-lg transition-theme">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">{headerInfo.title}</h1>
+              <p className="text-white/80 text-sm mt-1">{headerInfo.subtitle}</p>
+            </div>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              aria-label={isDark ? 'Zu hellem Theme wechseln' : 'Zu dunklem Theme wechseln'}
+            >
+              <span className="text-xl">{isDark ? '☀️' : '🌙'}</span>
+            </button>
           </div>
         </header>
 
         {/* Main Content mit Error Boundary */}
         <main className="max-w-4xl mx-auto p-4 mt-4">
-          <ErrorBoundary>
-            {renderModule()}
-          </ErrorBoundary>
+          <ErrorBoundary>{renderModule()}</ErrorBoundary>
         </main>
 
         {/* Navigation */}
@@ -148,12 +168,24 @@ export function App() {
 
 // Coming Soon Placeholder
 function ComingSoon({ title, icon }) {
+  const { isDark } = useTheme()
+
   return (
-    <div className="bg-white rounded-xl shadow-md p-8 text-center animate-fade-in">
+    <div
+      className={`rounded-xl shadow-md p-8 text-center animate-fade-in transition-theme ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
+    >
       <span className="text-6xl mb-4 block">{icon}</span>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-2">{title}</h2>
-      <p className="text-gray-500 mb-4">Dieses Modul wird bald verfügbar sein.</p>
-      <div className="inline-flex items-center gap-2 px-4 py-2 bg-calm-50 text-calm-700 rounded-full text-sm">
+      <h2
+        className={`text-2xl font-semibold mb-2 ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
+      >
+        {title}
+      </h2>
+      <p className={`mb-4 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}>
+        Dieses Modul wird bald verfügbar sein.
+      </p>
+      <div
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm ${isDark ? 'bg-calm-900/50 text-calm-300' : 'bg-calm-50 text-calm-700'}`}
+      >
         <span className="animate-pulse">🔨</span>
         <span>In Entwicklung</span>
       </div>
