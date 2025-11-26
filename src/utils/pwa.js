@@ -40,7 +40,10 @@ export async function registerServiceWorker() {
 export function activateUpdate(registration) {
   if (registration?.waiting) {
     registration.waiting.postMessage('skipWaiting')
-    window.location.reload()
+    // Zeige eine Bestätigungsabfrage, um Datenverlust zu vermeiden
+    if (window.confirm('Eine neue Version ist verfügbar. Ungespeicherte Daten könnten verloren gehen. Möchtest du die Seite neu laden?')) {
+      window.location.reload()
+    }
   }
 }
 
