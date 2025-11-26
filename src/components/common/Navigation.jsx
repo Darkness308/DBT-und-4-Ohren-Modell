@@ -5,9 +5,9 @@
 
 const navItems = [
   { id: 'home', icon: '🏠', label: 'Home' },
-  { id: 'vier-ohren', icon: '👂', label: 'Vier Ohren' },
+  { id: 'vier-ohren', icon: '👂', label: 'Analyzer' },
   { id: 'skills', icon: '🧰', label: 'Skills' },
-  { id: 'diary', icon: '📊', label: 'Diary' },
+  { id: 'settings', icon: '⚙️', label: 'Daten' },
 ]
 
 export default function Navigation({ activeModule, onNavigate }) {
@@ -40,14 +40,13 @@ function NavItem({ icon, label, active, onClick }) {
         flex flex-col items-center justify-center
         px-3 py-2 rounded-xl
         transition-smooth min-w-[64px]
-        ${active
-          ? 'bg-calm-100 text-calm-700'
-          : 'text-gray-500 hover:bg-gray-100'
-        }
+        ${active ? 'bg-calm-100 text-calm-700' : 'text-gray-500 hover:bg-gray-100'}
       `}
       aria-current={active ? 'page' : undefined}
     >
-      <span className="text-xl mb-1" aria-hidden="true">{icon}</span>
+      <span className="text-xl mb-1" aria-hidden="true">
+        {icon}
+      </span>
       <span className="text-xs font-medium">{label}</span>
     </button>
   )

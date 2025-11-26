@@ -2,9 +2,11 @@ import { createContext, useContext, useReducer, useEffect } from 'react'
 import { eventBus } from './utils/eventBus'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
+import PWAManager from './components/pwa/PWAManager'
 import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
 import SkillFinder from './components/skill-finder/SkillFinder'
 import Dashboard from './components/dashboard/Dashboard'
+import DataManagement from './components/settings/DataManagement'
 
 // App Context
 const AppContext = createContext(null)
@@ -16,12 +18,12 @@ const initialState = {
     settings: {
       theme: 'light',
       reducedMotion: false,
-      fontSize: 'normal'
-    }
+      fontSize: 'normal',
+    },
   },
   diaryData: [],
   chainAnalyses: [],
-  skillHistory: []
+  skillHistory: [],
 }
 
 function appReducer(state, action) {
@@ -31,7 +33,7 @@ function appReducer(state, action) {
     case 'UPDATE_SETTINGS':
       return {
         ...state,
-        user: { ...state.user, settings: { ...state.user.settings, ...action.payload } }
+        user: { ...state.user, settings: { ...state.user.settings, ...action.payload } },
       }
     case 'ADD_DIARY_ENTRY':
       return { ...state, diaryData: [...state.diaryData, action.payload] }
@@ -70,7 +72,10 @@ export function App() {
   // Event-Bus Listener
   useEffect(() => {
     const unsubscribeSkill = eventBus.on('skill:used', (data) => {
-      dispatch({ type: 'ADD_SKILL_USAGE', payload: { ...data, timestamp: new Date().toISOString() } })
+      dispatch({
+        type: 'ADD_SKILL_USAGE',
+        payload: { ...data, timestamp: new Date().toISOString() },
+      })
     })
 
     return () => {
@@ -90,6 +95,8 @@ export function App() {
         return <VierOhrenAnalyzer />
       case 'skills':
         return <SkillFinder />
+      case 'settings':
+        return <DataManagement />
       case 'diary':
         return <ComingSoon title="Diary Card" icon="📊" />
       case 'chain':
@@ -108,6 +115,8 @@ export function App() {
         return { title: 'Vier-Ohren-Modell', subtitle: 'Kommunikation verstehen' }
       case 'skills':
         return { title: 'Skill-Finder', subtitle: 'DBT-Skills entdecken' }
+      case 'settings':
+        return { title: 'Daten & Backup', subtitle: 'Export und Sicherung' }
       case 'diary':
         return { title: 'Diary Card', subtitle: 'Emotionen tracken' }
       case 'chain':
@@ -121,22 +130,19 @@ export function App() {
 
   return (
     <AppContext.Provider value={{ state, dispatch, navigate }}>
+      <PWAManager />
       <div className="min-h-screen gradient-subtle pb-20">
         {/* Header */}
         <header className="gradient-calm text-white p-6 shadow-lg">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold">{headerInfo.title}</h1>
-            <p className="text-white/80 text-sm mt-1">
-              {headerInfo.subtitle}
-            </p>
+            <p className="text-white/80 text-sm mt-1">{headerInfo.subtitle}</p>
           </div>
         </header>
 
         {/* Main Content mit Error Boundary */}
         <main className="max-w-4xl mx-auto p-4 mt-4">
-          <ErrorBoundary>
-            {renderModule()}
-          </ErrorBoundary>
+          <ErrorBoundary>{renderModule()}</ErrorBoundary>
         </main>
 
         {/* Navigation */}

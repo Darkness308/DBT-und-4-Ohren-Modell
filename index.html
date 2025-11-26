@@ -2,12 +2,33 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#667eea" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="DBT Skills" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    <!-- SEO & Accessibility -->
     <meta name="description" content="Therapeutische Web-App: DBT-Skills & Vier-Ohren-Modell für Emotionsregulation und Kommunikationsanalyse" />
+    <meta name="keywords" content="DBT, Dialektisch-Behaviorale Therapie, Vier-Ohren-Modell, Schulz von Thun, Skills, Emotionsregulation" />
+
     <title>DBT Skills & Vier-Ohren-Modell</title>
   </head>
   <body>
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
+        <h1>JavaScript erforderlich</h1>
+        <p>Diese App benötigt JavaScript. Bitte aktiviere JavaScript in deinen Browser-Einstellungen.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
