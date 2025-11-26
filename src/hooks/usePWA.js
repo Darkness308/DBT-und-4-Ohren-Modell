@@ -8,7 +8,6 @@ import {
   setupInstallPrompt,
   promptInstall,
   isInstalled,
-  canInstall,
   onPWAEvent,
   activateUpdate,
   setupNetworkStatusHandler,
