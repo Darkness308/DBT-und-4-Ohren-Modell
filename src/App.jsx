@@ -1,12 +1,13 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
 import { eventBus } from './utils/eventBus'
+import { useTheme } from './contexts/ThemeContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
 import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
 import SkillFinder from './components/skill-finder/SkillFinder'
 import Dashboard from './components/dashboard/Dashboard'
-import DataManagement from './components/settings/DataManagement'
+import Settings from './components/settings/Settings'
 
 // App Context
 const AppContext = createContext(null)
@@ -16,7 +17,6 @@ const initialState = {
   user: {
     name: null,
     settings: {
-      theme: 'light',
       reducedMotion: false,
       fontSize: 'normal',
     },
@@ -50,6 +50,7 @@ function appReducer(state, action) {
 
 export function App() {
   const [state, dispatch] = useReducer(appReducer, initialState)
+  const { isDark, toggleTheme } = useTheme()
 
   // Persistenz laden
   useEffect(() => {
@@ -96,7 +97,7 @@ export function App() {
       case 'skills':
         return <SkillFinder />
       case 'settings':
-        return <DataManagement />
+        return <Settings />
       case 'diary':
         return <ComingSoon title="Diary Card" icon="📊" />
       case 'chain':
@@ -116,7 +117,7 @@ export function App() {
       case 'skills':
         return { title: 'Skill-Finder', subtitle: 'DBT-Skills entdecken' }
       case 'settings':
-        return { title: 'Daten & Backup', subtitle: 'Export und Sicherung' }
+        return { title: 'Einstellungen', subtitle: 'Design & Daten' }
       case 'diary':
         return { title: 'Diary Card', subtitle: 'Emotionen tracken' }
       case 'chain':
@@ -131,12 +132,25 @@ export function App() {
   return (
     <AppContext.Provider value={{ state, dispatch, navigate }}>
       <PWAManager />
-      <div className="min-h-screen gradient-subtle pb-20">
+      <div
+        className={`min-h-screen pb-20 transition-theme ${isDark ? 'bg-dark-bg' : 'gradient-subtle'}`}
+      >
         {/* Header */}
-        <header className="gradient-calm text-white p-6 shadow-lg">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold">{headerInfo.title}</h1>
-            <p className="text-white/80 text-sm mt-1">{headerInfo.subtitle}</p>
+        <header className="gradient-calm text-white p-6 shadow-lg transition-theme">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">{headerInfo.title}</h1>
+              <p className="text-white/80 text-sm mt-1">{headerInfo.subtitle}</p>
+            </div>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              aria-label={isDark ? 'Zu hellem Theme wechseln' : 'Zu dunklem Theme wechseln'}
+            >
+              <span className="text-xl">{isDark ? '☀️' : '🌙'}</span>
+            </button>
           </div>
         </header>
 
@@ -154,12 +168,24 @@ export function App() {
 
 // Coming Soon Placeholder
 function ComingSoon({ title, icon }) {
+  const { isDark } = useTheme()
+
   return (
-    <div className="bg-white rounded-xl shadow-md p-8 text-center animate-fade-in">
+    <div
+      className={`rounded-xl shadow-md p-8 text-center animate-fade-in transition-theme ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
+    >
       <span className="text-6xl mb-4 block">{icon}</span>
-      <h2 className="text-2xl font-semibold text-gray-800 mb-2">{title}</h2>
-      <p className="text-gray-500 mb-4">Dieses Modul wird bald verfügbar sein.</p>
-      <div className="inline-flex items-center gap-2 px-4 py-2 bg-calm-50 text-calm-700 rounded-full text-sm">
+      <h2
+        className={`text-2xl font-semibold mb-2 ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
+      >
+        {title}
+      </h2>
+      <p className={`mb-4 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}>
+        Dieses Modul wird bald verfügbar sein.
+      </p>
+      <div
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm ${isDark ? 'bg-calm-900/50 text-calm-300' : 'bg-calm-50 text-calm-700'}`}
+      >
         <span className="animate-pulse">🔨</span>
         <span>In Entwicklung</span>
       </div>
