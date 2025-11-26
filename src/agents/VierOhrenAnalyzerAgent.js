@@ -86,7 +86,7 @@ class VierOhrenAnalyzerAgent {
   /**
    * Generiert eine generische Analyse
    */
-  generateGenericAnalysis(statement, context, perspective) {
+  generateGenericAnalysis(statement, _context, _perspective) {
     return {
       sachebene: {
         content: `Die Aussage "${statement}" enthält eine Information oder Feststellung.`,

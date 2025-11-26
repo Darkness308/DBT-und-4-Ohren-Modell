@@ -101,7 +101,7 @@ export default function StreakCard({ skillHistory }) {
 
       {/* Motivations-Nachricht */}
       <p className="text-sm text-gray-600 italic text-center">
-        "{message}"
+        &ldquo;{message}&rdquo;
       </p>
 
       {/* Letzte Nutzung */}

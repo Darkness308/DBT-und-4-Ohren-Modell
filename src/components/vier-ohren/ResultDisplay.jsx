@@ -20,7 +20,7 @@ export default function ResultDisplay({ analysis }) {
       {/* Ursprüngliche Aussage */}
       <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
         <p className="text-sm text-gray-500 mb-1">Analysierte Aussage:</p>
-        <p className="text-lg font-medium text-gray-800">"{analysis.originalStatement}"</p>
+        <p className="text-lg font-medium text-gray-800">&ldquo;{analysis.originalStatement}&rdquo;</p>
         {analysis.context && (
           <p className="text-sm text-gray-500 mt-2">
             <span className="font-medium">Kontext:</span> {analysis.context}
@@ -63,7 +63,7 @@ export default function ResultDisplay({ analysis }) {
   )
 }
 
-function LevelCard({ level, data, description }) {
+function LevelCard({ level: _level, data, description }) {
   const colorClasses = {
     blue: 'from-blue-50 to-blue-100 border-blue-200',
     green: 'from-green-50 to-green-100 border-green-200',
