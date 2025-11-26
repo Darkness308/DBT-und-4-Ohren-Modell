@@ -183,7 +183,7 @@ export const dbtSkills = [
       T: 'Temperatur - Kaltes Wasser auf Gesicht/Nacken',
       I: 'Intensive Bewegung - 10-15 Min Sport',
       P: 'Paced Breathing - Langsames Atmen (4 ein, 6-8 aus)',
-      P: 'Progressive Muskelentspannung'
+      P2: 'Progressive Muskelentspannung'
     },
     whenToUse: [
       'Bei Panikattacken',
@@ -211,7 +211,7 @@ export const dbtSkills = [
     acronym: {
       A: 'Activities - Aktivitäten (Sport, Spiel, Aufräumen)',
       C: 'Contributing - Anderen helfen, zuhören',
-      C: 'Comparisons - Vergleiche mit schwierigeren Zeiten',
+      C2: 'Comparisons - Vergleiche mit schwierigeren Zeiten',
       E: 'Emotions - Andere Gefühle erzeugen (lustiger Film)',
       P: 'Pushing Away - Schmerz gedanklich wegschieben',
       T: 'Thoughts - Gedanken beschäftigen (Sudoku, Zählen)',
