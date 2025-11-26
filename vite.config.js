@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => ({
 
   build: {
     outDir: 'dist',
-    sourcemap: mode !== 'production',
+    sourcemap: mode === 'development',
     // PWA Service Worker muss im Root sein
     rollupOptions: {
       input: {
