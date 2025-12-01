@@ -7,10 +7,12 @@
 import { useTheme } from '../../contexts/ThemeContext'
 
 // Modul-spezifische Farben für konsistente Navigation
+// Max 5 Items für minimale kognitive Last
 const navItems = [
   { id: 'home', icon: '🏠', label: 'Home', color: 'calm' },
   { id: 'vier-ohren', icon: '👂', label: 'Analyzer', color: 'lavender' },
   { id: 'skills', icon: '🧰', label: 'Skills', color: 'success' },
+  { id: 'diary', icon: '📊', label: 'Diary', color: 'warning' },
   { id: 'settings', icon: '⚙️', label: 'Mehr', color: 'gray' },
 ]
 

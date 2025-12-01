@@ -8,6 +8,8 @@ import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
 import SkillFinder from './components/skill-finder/SkillFinder'
 import Dashboard from './components/dashboard/Dashboard'
 import Settings from './components/settings/Settings'
+import DiaryCard from './components/diary-card/DiaryCard'
+import ChainAnalysis from './components/chain-analysis/ChainAnalysis'
 
 // App Context
 const AppContext = createContext(null)
@@ -99,9 +101,9 @@ export function App() {
       case 'settings':
         return <Settings />
       case 'diary':
-        return <ComingSoon title="Diary Card" icon="📊" />
+        return <DiaryCard />
       case 'chain':
-        return <ComingSoon title="Chain Analysis" icon="🔗" />
+        return <ChainAnalysis />
       default:
         return <Dashboard />
     }
@@ -163,33 +165,6 @@ export function App() {
         <Navigation activeModule={state.activeModule} onNavigate={navigate} />
       </div>
     </AppContext.Provider>
-  )
-}
-
-// Coming Soon Placeholder
-function ComingSoon({ title, icon }) {
-  const { isDark } = useTheme()
-
-  return (
-    <div
-      className={`rounded-xl shadow-md p-8 text-center animate-fade-in transition-theme ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
-    >
-      <span className="text-6xl mb-4 block">{icon}</span>
-      <h2
-        className={`text-2xl font-semibold mb-2 ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
-      >
-        {title}
-      </h2>
-      <p className={`mb-4 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}>
-        Dieses Modul wird bald verfügbar sein.
-      </p>
-      <div
-        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm ${isDark ? 'bg-calm-900/50 text-calm-300' : 'bg-calm-50 text-calm-700'}`}
-      >
-        <span className="animate-pulse">🔨</span>
-        <span>In Entwicklung</span>
-      </div>
-    </div>
   )
 }
 
