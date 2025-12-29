@@ -1,22 +1,46 @@
-# CLAUDE.md - DBT Skills & Vier-Ohren-Modell Web-App
+# CLAUDE.md - CTMM Bonnie (Crisis & Therapeutic Management Module)
 
 ## 🎯 Projekt-Mission
 
-Eine therapeutische Web-App, die **DBT-Skills** (Dialektisch-Behaviorale Therapie) mit dem **Vier-Ohren-Modell** nach Schulz von Thun verbindet. Ziel: Nutzerfreundliche Tools für Emotionsregulation und Kommunikationsanalyse.
+**CTMM Bonnie** ist eine therapeutische Web-App für **Bonnie** - eine Begleiterin in Krisen und im Alltag. **Clyde** ist der digitale Guide, der Bonnie durch schwierige Momente navigiert.
+
+Die App verbindet:
+
+- **DBT-Skills** (Dialektisch-Behaviorale Therapie)
+- **Vier-Ohren-Modell** nach Schulz von Thun
+- **Stress-adaptives UI** mit Notfall-Modus
+- **Neuro-Framing** (neurobiologische Erklärungen)
+
+---
+
+## 🧭 Clyde - Der digitale Begleiter
+
+Clyde spricht direkt zu Bonnie. Seine Stimme ist:
+
+- **Direkt**: Klare, kurze Sätze
+- **Erklärend**: Neurobiologische Zusammenhänge
+- **Begleitend**: "Wir machen das zusammen"
+- **Nordstern**: Gibt Orientierung in Krisen
+
+**VERBOTEN:**
+
+- "Ich will dir helfen" (triggert Scham)
+- "Du musst" (erzeugt Druck)
+- Übernahme-Sprache
 
 ---
 
 ## 📚 Dokumentation
 
-| Datei | Inhalt |
-|-------|--------|
-| `docs/agents.md` | Agent-Architektur & Spezifikationen |
-| `docs/design-system.md` | UI/UX Guidelines, Farben, Komponenten |
-| `docs/dbt-skills-referenz.md` | Alle DBT-Skills mit Erklärungen |
-| `docs/vier-ohren-theorie.md` | Kommunikationsmodell-Grundlagen |
-| `docs/TECHNICAL_DEBT_ANALYSIS.md` | Technische Schulden & EKS-Strategie |
-| `docs/QUALITY_ASSESSMENT.md` | 10-Dimensionen Qualitätsbewertung |
-| `docs/PARETO_OPTIMIZATION.md` | 80/20 & 85/15 Optimierungsguide |
+| Datei                             | Inhalt                                |
+| --------------------------------- | ------------------------------------- |
+| `docs/agents.md`                  | Agent-Architektur & Spezifikationen   |
+| `docs/design-system.md`           | UI/UX Guidelines, Farben, Komponenten |
+| `docs/dbt-skills-referenz.md`     | Alle DBT-Skills mit Erklärungen       |
+| `docs/vier-ohren-theorie.md`      | Kommunikationsmodell-Grundlagen       |
+| `docs/TECHNICAL_DEBT_ANALYSIS.md` | Technische Schulden & EKS-Strategie   |
+| `docs/QUALITY_ASSESSMENT.md`      | 10-Dimensionen Qualitätsbewertung     |
+| `docs/PARETO_OPTIMIZATION.md`     | 80/20 & 85/15 Optimierungsguide       |
 
 ---
 
@@ -24,314 +48,235 @@ Eine therapeutische Web-App, die **DBT-Skills** (Dialektisch-Behaviorale Therapi
 
 Verfügbare Befehle in `.claude/commands/`:
 
-| Befehl | Beschreibung | Beispiel |
-|--------|--------------|----------|
-| `/analyze-quality` | 10-Dimensionen Qualitätsanalyse | `/analyze-quality src/agents` |
+| Befehl             | Beschreibung                           | Beispiel                       |
+| ------------------ | -------------------------------------- | ------------------------------ |
+| `/analyze-quality` | 10-Dimensionen Qualitätsanalyse        | `/analyze-quality src/modules` |
 | `/pareto-optimize` | Pareto-Optimierungen mit Web-Recherche | `/pareto-optimize performance` |
-| `/deep-analyze` | Tiefenanalyse mit Präzisionsgraden | `/deep-analyze deep src/agents` |
-
-**Nutzung:**
-```bash
-# Im Claude Code CLI
-/analyze-quality [bereich]           # z.B. components, agents
-/pareto-optimize [fokus]             # z.B. performance, accessibility
-/deep-analyze [tiefe] [bereich]      # tiefe: quick, standard, deep
-```
+| `/deep-analyze`    | Tiefenanalyse mit Präzisionsgraden     | `/deep-analyze deep src/core`  |
 
 ---
 
 ## 🏗️ Architektur-Übersicht
 
 ### Tech-Stack
+
 - **Frontend**: React 18 + Vite
 - **Styling**: TailwindCSS
 - **State**: React Context + useReducer
-- **Charts**: Chart.js / Recharts
-- **Storage**: LocalStorage (später: Backend-Integration)
-- **Audio**: Web Audio API (für Imaginationsübungen)
+- **Haptics**: Web Vibration API
+- **Storage**: LocalStorage
+- **PWA**: Service Worker ready
 
-### Agent-basierte Architektur
+### Modul-basierte Architektur
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│              AppOrchestrator (Haupt-Agent)              │
-│  - Koordiniert alle Module                              │
-│  - Globaler State (User-Daten, Einstellungen)           │
-│  - Navigation & Routing                                 │
-└─────────────────────────────────────────────────────────┘
-                          │
-         ┌────────────────┼────────────────┐
-         │                │                │
-    ┌────▼────┐     ┌─────▼─────┐    ┌─────▼─────┐
-    │ Analyse │     │ Training  │    │ Tracking  │
-    │ Agents  │     │ Agents    │    │ Agents    │
-    └─────────┘     └───────────┘    └───────────┘
-         │                │                │
-    ┌────┴────┐     ┌─────┴─────┐    ┌─────┴─────┐
-    │         │     │           │    │           │
-    ▼         ▼     ▼           ▼    ▼           ▼
- VierOhren  Chain  SkillFinder Imagi- Diary   Pattern
- Analyzer   Analy- Agent      nation  Card    Recog-
- Agent      sisAgt            Agent   Agent   nition
+┌─────────────────────────────────────────────────────────────┐
+│                    App.jsx (Orchestrator)                   │
+│  - Navigation, State, Event-Bus                             │
+└─────────────────────────────────────────────────────────────┘
+                              │
+         ┌────────────────────┼────────────────────┐
+         │                    │                    │
+    ┌────▼────┐         ┌─────▼─────┐        ┌─────▼─────┐
+    │  CORE   │         │  MODULES  │        │COMPONENTS │
+    │ System  │         │  Feature  │        │  Shared   │
+    └─────────┘         └───────────┘        └───────────┘
+         │                    │                    │
+    ┌────┴────┐         ┌─────┴─────┐        ┌─────┴─────┐
+    │         │         │           │        │           │
+    ▼         ▼         ▼           ▼        ▼           ▼
+  Clyde   Haptics   VierOhren   DBT-Skills  Button    Card
+  EventBus Storage  Dashboard   Emergency   Tooltip   BioWave
 ```
 
 ---
 
-## 📦 Module & Features
-
-### Modul 1: Vier-Ohren-Analyzer
-**Agent**: `VierOhrenAnalyzerAgent`
-- Nutzer gibt Aussage ein
-- App analysiert alle 4 Ebenen (Sach, Selbstoffenbarung, Beziehung, Appell)
-- Zeigt mögliche Interpretationen
-- Übungsaufgaben mit Feedback
-
-### Modul 2: DBT-Skill-Finder
-**Agent**: `SkillFinderAgent`
-- Situation beschreiben (Freitext oder geführt)
-- Matching-Algorithmus für passende Skills
-- Kategorisiert nach: Achtsamkeit, Stresstoleranz, Emotionsregulation, Zwischenmenschliche Effektivität
-- Skill-Details mit Übungsanleitungen
-
-### Modul 3: Chain Analysis Tool
-**Agent**: `ChainAnalysisAgent`
-- Interaktive Verhaltensketten-Analyse
-- Schritt-für-Schritt: Trigger → Gedanken → Gefühle → Verhalten → Konsequenzen
-- Identifikation von Interventionspunkten
-- Speicherung & Musteranalyse
-
-### Modul 4: Digitale Diary Card
-**Agent**: `DiaryCardAgent`
-- Tägliches Tracking: Emotionen (0-5 Skala)
-- Genutzte Skills protokollieren
-- Problematische Verhaltensweisen tracken
-- Visualisierung über Zeit (Charts)
-- Export für Therapeuten
-
-### Modul 5: Imaginations-Übungen
-**Agent**: `ImaginationAgent`
-- Audio-geführte Übungen
-- Safe Place / Sicherer Ort
-- Baum-Meditation
-- Light Stream Technik
-- Timer & Fortschrittsanzeige
-
-### Modul 6: DEAR MAN Trainer
-**Agent**: `DearManAgent`
-- Interaktiver Kommunikations-Trainer
-- Schritt-für-Schritt durch DEAR MAN
-- Beispiel-Dialoge
-- Eigene Szenarien erstellen & üben
-
----
-
-## 🎨 Design-Prinzipien
-
-Siehe `docs/design-system.md` für Details.
-
-**Kernprinzipien:**
-- **Beruhigend**: Sanfte Farben, keine grellen Akzente
-- **Klar**: Einfache Navigation, wenig kognitive Last
-- **Ermutiternd**: Positive Formulierungen, Fortschrittsanzeigen
-- **Barrierefrei**: WCAG AA konform, Screen-Reader-optimiert
-
-**Farbpalette (Therapeutisch angepasst):**
-- Primary: `#667eea` (beruhigendes Blau-Violett)
-- Success: `#22c55e` (sanftes Grün für Erfolge)
-- Warning: `#f59e0b` (warmes Orange, nicht alarmierend)
-- Calm: `#e0e7ff` (helles Indigo für Hintergründe)
-
----
-
-## 📁 Projektstruktur
+## 📁 Projektstruktur (NEU)
 
 ```
-/dbt-vier-ohren-app/
+/ctmm-bonnie/
 ├── CLAUDE.md                     # Diese Datei
 ├── package.json
 ├── vite.config.js
 ├── tailwind.config.js
-├── index.html
 │
-├── docs/
-│   ├── agents.md                 # Agent-Spezifikationen
-│   ├── design-system.md          # UI/UX Guidelines
-│   ├── dbt-skills-referenz.md    # DBT-Skills Dokumentation
-│   └── vier-ohren-theorie.md     # Kommunikationsmodell
+├── docs/                         # Dokumentation
 │
 ├── src/
 │   ├── main.jsx                  # Entry Point
 │   ├── App.jsx                   # Haupt-Orchestrator
-│   ├── index.css                 # Globale Styles
+│   ├── index.css                 # Globale Styles + Clyde/Emergency
 │   │
-│   ├── agents/                   # Agent-Implementierungen
-│   │   ├── VierOhrenAnalyzerAgent.js
-│   │   ├── SkillFinderAgent.js
-│   │   ├── ChainAnalysisAgent.js
-│   │   ├── DiaryCardAgent.js
-│   │   ├── ImaginationAgent.js
-│   │   └── DearManAgent.js
+│   ├── core/                     # 🔧 KERN-SYSTEM
+│   │   ├── clyde.js              # Clyde Voice, Stress-Levels, Neuro-Framing
+│   │   ├── haptics.js            # Web Vibration API Patterns
+│   │   ├── eventBus.js           # Inter-Modul-Kommunikation
+│   │   ├── storage.js            # LocalStorage Wrapper
+│   │   └── useHaptics.js         # React Hook für Haptics
 │   │
-│   ├── components/
-│   │   ├── common/               # Shared Components
-│   │   │   ├── Card.jsx
-│   │   │   ├── Button.jsx
-│   │   │   ├── Input.jsx
-│   │   │   ├── Modal.jsx
-│   │   │   └── Navigation.jsx
-│   │   │
-│   │   ├── vier-ohren/           # Vier-Ohren-Modul
+│   ├── modules/                  # 📦 FEATURE-MODULE
+│   │   ├── vier-ohren/           # Kommunikations-Analyse
+│   │   │   ├── VierOhrenAnalyzer.jsx
+│   │   │   ├── VierOhrenAnalyzerAgent.js
 │   │   │   ├── AnalyzerForm.jsx
 │   │   │   ├── ResultDisplay.jsx
-│   │   │   └── ExerciseMode.jsx
+│   │   │   ├── ExampleSelector.jsx
+│   │   │   └── vierOhrenExamples.js
 │   │   │
-│   │   ├── skill-finder/         # Skill-Finder-Modul
-│   │   │   ├── SituationInput.jsx
+│   │   ├── dbt-skills/           # DBT Skill-Finder
+│   │   │   ├── SkillFinder.jsx
+│   │   │   ├── SkillFinderAgent.js
+│   │   │   ├── SkillDetail.jsx
 │   │   │   ├── SkillRecommendations.jsx
-│   │   │   └── SkillDetail.jsx
+│   │   │   ├── SituationSelector.jsx
+│   │   │   ├── IntensitySlider.jsx
+│   │   │   └── dbtSkills.js
 │   │   │
-│   │   ├── chain-analysis/       # Chain-Analysis-Modul
-│   │   │   ├── ChainBuilder.jsx
-│   │   │   ├── ChainVisualization.jsx
-│   │   │   └── InterventionSuggestions.jsx
+│   │   ├── dashboard/            # Dashboard & Übersicht
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── ModuleOverview.jsx
+│   │   │   ├── QuickActions.jsx
+│   │   │   ├── RecentActivity.jsx
+│   │   │   ├── SkillOfTheDay.jsx
+│   │   │   ├── SkillUsageChart.jsx
+│   │   │   └── StreakCard.jsx
 │   │   │
-│   │   ├── diary-card/           # Diary-Card-Modul
-│   │   │   ├── DailyEntry.jsx
-│   │   │   ├── SkillTracker.jsx
-│   │   │   ├── EmotionSlider.jsx
-│   │   │   └── WeeklyChart.jsx
+│   │   └── emergency/            # Notfall-UI
+│   │       └── EmergencyOverlay.jsx
+│   │
+│   ├── components/               # 🎨 SHARED COMPONENTS
+│   │   ├── common/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Card.jsx
+│   │   │   ├── Input.jsx
+│   │   │   ├── Navigation.jsx
+│   │   │   ├── ErrorBoundary.jsx
+│   │   │   ├── ClydeMessage.jsx  # Clyde Sprechblasen
+│   │   │   ├── Tooltip.jsx       # Schüler-Erklärungen
+│   │   │   ├── StressIndicator.jsx
+│   │   │   ├── BioWave.jsx       # Stress-Visualisierung
+│   │   │   └── RelatedSkills.jsx
 │   │   │
-│   │   └── imagination/          # Imaginations-Modul
-│   │       ├── ExercisePlayer.jsx
-│   │       ├── SafePlaceGuide.jsx
-│   │       └── ProgressTimer.jsx
+│   │   ├── settings/
+│   │   │   ├── Settings.jsx
+│   │   │   ├── ThemeToggle.jsx
+│   │   │   ├── HapticsToggle.jsx
+│   │   │   └── DataManagement.jsx
+│   │   │
+│   │   └── pwa/
+│   │       ├── PWAManager.jsx
+│   │       ├── InstallBanner.jsx
+│   │       ├── UpdateBanner.jsx
+│   │       └── OfflineIndicator.jsx
 │   │
-│   ├── data/
-│   │   ├── dbtSkills.js          # Alle DBT-Skills als Daten
-│   │   ├── vierOhrenExamples.js  # Beispiele für Vier-Ohren
-│   │   ├── emotionList.js        # Emotionswortschatz
-│   │   └── imaginationScripts.js # Übungs-Skripte
+│   ├── contexts/
+│   │   └── ThemeContext.jsx
 │   │
-│   ├── utils/
-│   │   ├── eventBus.js           # Agent-Kommunikation
-│   │   ├── storage.js            # LocalStorage Wrapper
-│   │   ├── skillMatcher.js       # Skill-Matching-Logik
-│   │   └── exportUtils.js        # Daten-Export
+│   ├── hooks/
+│   │   └── usePWA.js
 │   │
-│   └── hooks/
-│       ├── useAgent.js           # Agent-Hook
-│       ├── useDiaryCard.js       # Diary-Card-Hook
-│       └── useLocalStorage.js    # Persistenz-Hook
+│   └── utils/                    # Legacy (wird migriert)
+│       ├── backup.js
+│       ├── exportUtils.js
+│       └── pwa.js
 │
-├── public/
-│   ├── audio/                    # Imaginations-Audios
-│   └── images/                   # Icons, Grafiken
-│
-└── tests/
-    ├── agents/                   # Agent-Tests
-    └── components/               # Component-Tests
+└── .claude/commands/             # Slash Commands
+    ├── analyze-quality.md
+    ├── pareto-optimize.md
+    └── deep-analyze.md
 ```
+
+---
+
+## 🚦 Stress-Level System
+
+| Level  | Range   | Farbe     | Clyde-Modus |
+| ------ | ------- | --------- | ----------- |
+| GREEN  | 0-30%   | `success` | Standard    |
+| YELLOW | 31-60%  | `warning` | Aufmerksam  |
+| ORANGE | 61-80%  | `orange`  | Vereinfacht |
+| RED    | 81-100% | `error`   | Notfall-UI  |
+
+Bei **RED (>90%)**: EmergencyOverlay wird aktiv mit TIPP-Skills.
+
+---
+
+## 🧠 Neuro-Framing
+
+Clyde erklärt neurobiologische Zusammenhänge:
+
+```javascript
+clyde.neuro.wut = {
+  trigger: '🔥 Wut / Hass',
+  mode: 'Kampf-Modus',
+  simple: 'Energie muss raus. Nicht denken.',
+  complex: 'Deine Amygdala meldet "Bedrohung"...',
+}
+```
+
+**Ziel**: "Das ist Gehirnchemie, kein Charakterfehler."
+
+---
+
+## 📳 Haptics System
+
+Therapeutische Vibrationsmuster (Web Vibration API):
+
+| Pattern        | Funktion                      |
+| -------------- | ----------------------------- |
+| `calmPulse`    | Beruhigender Einzelimpuls     |
+| `heartbeat`    | Langsamer Herzschlag (50 BPM) |
+| `wave`         | Ansteigende/abfallende Welle  |
+| `breatheCycle` | 4-4-6 Atem-Begleitung         |
 
 ---
 
 ## 🚀 Entwicklungs-Befehle
 
 ```bash
-# Installation
-npm install
-
-# Entwicklung starten
-npm run dev
-
-# Build für Produktion
-npm run build
-
-# Tests ausführen
-npm run test
-
-# Linting
-npm run lint
+npm install          # Installation
+npm run dev          # Entwicklung
+npm run build        # Produktion
+npm run lint         # Linting
 ```
-
----
-
-## 🔧 Entwicklungs-Richtlinien
-
-### Code-Stil
-- **Functional Components** mit Hooks (keine Class Components)
-- **TypeScript-ready** (JSDoc für jetzt, später TS-Migration möglich)
-- **Keine externen UI-Libraries** außer TailwindCSS
-- **Accessibility first**: Alle Komponenten mit ARIA-Labels
-
-### Agent-Entwicklung
-1. Jeder Agent in eigener Datei unter `src/agents/`
-2. Klare Schnittstellen definieren (siehe `docs/agents.md`)
-3. Event-Bus für Inter-Agent-Kommunikation
-4. State-Isolation: Agenten mutieren nie globalen State direkt
-
-### Commit-Konventionen
-```
-feat: Neue Funktion hinzugefügt
-fix: Bugfix
-docs: Dokumentation aktualisiert
-style: Formatierung (kein Code-Change)
-refactor: Code-Refactoring
-test: Tests hinzugefügt/geändert
-```
-
----
-
-## ⚠️ Wichtige Hinweise für Claude Code
-
-### Therapeutischer Kontext
-- Diese App ist für **Selbsthilfe und Therapie-Begleitung**
-- Keine Diagnosen stellen
-- Bei Krisen-Features: Immer Hinweis auf professionelle Hilfe
-- Trigger-Warnungen bei sensiblen Übungen
-
-### Datenschutz
-- Alle Daten lokal speichern (LocalStorage)
-- Keine Analytics ohne Consent
-- Export-Funktion für Nutzer-Autonomie
-
-### Barrierefreiheit
-- Alle Inputs mit Labels
-- Fokus-Management bei Modals
-- Reduzierte Bewegung respektieren (`prefers-reduced-motion`)
-- Ausreichende Kontraste (4.5:1 minimum)
 
 ---
 
 ## 📊 Status & Roadmap
 
-### Phase 1: MVP ✅
-- [x] Projekt-Setup (Vite + React + Tailwind)
-- [x] Basis-Komponenten (Card, Button, Navigation)
-- [x] Vier-Ohren-Analyzer (Kernfunktion)
-- [x] Skill-Finder (Basis-Version)
+### Phase 1: Foundation ✅
 
-### Phase 2: Core Features (aktuell)
+- [x] Projekt-Setup (Vite + React + Tailwind)
+- [x] Basis-Komponenten
+- [x] Vier-Ohren-Analyzer
+- [x] Skill-Finder
+
+### Phase 2: Clyde System ✅
+
+- [x] Clyde Voice Guidelines
+- [x] Stress-Level Tracking
+- [x] Emergency Overlay
+- [x] Neuro-Framing
+- [x] Cognitive Load Tracking
+
+### Phase 3: Sensorik ✅
+
+- [x] Haptics Module (Web Vibration API)
+- [x] BioWave Visualisierung
+- [x] Stress-adaptive UI
+
+### Phase 4: Konsolidierung ✅
+
+- [x] Modul-basierte Architektur
+- [x] Core/Modules/Components Trennung
+- [x] Import-Pfade bereinigt
+
+### Phase 5: Erweiterungen (geplant)
+
 - [ ] Chain Analysis Tool
 - [ ] Digitale Diary Card
-- [x] LocalStorage-Persistenz (Basis)
-
-### Phase 3: Erweiterungen
 - [ ] Imaginations-Übungen mit Audio
 - [ ] DEAR MAN Trainer
-- [ ] Muster-Erkennung über Zeit
-- [ ] Export-Funktionen (PDF, CSV)
-
-### Phase 4: Polish
-- [ ] Onboarding-Flow
-- [ ] Einstellungen & Personalisierung
-- [ ] PWA-Unterstützung
-- [ ] Accessibility-Audit
-
-### Technische Qualität
-- [x] Technical Debt Analyse erstellt
-- [x] 10-Dimensionen Qualitätsbewertung (B- 6.8/10)
-- [x] Pareto-Optimierungsguide erstellt
-- [x] Slash Commands für Analyse-Tools
 
 ---
 
@@ -339,5 +284,5 @@ test: Tests hinzugefügt/geändert
 
 - **DBT Skills Training**: Linehan, M. (2015). DBT Skills Training Manual
 - **Vier-Ohren-Modell**: Schulz von Thun, F. (1981). Miteinander reden
+- **Apollo Neuroscience**: Vagus-Stimulation Forschung
 - **React Best Practices**: https://react.dev
-- **TailwindCSS**: https://tailwindcss.com/docs

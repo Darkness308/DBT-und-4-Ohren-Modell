@@ -1,4 +1,4 @@
-import clyde from '../../utils/clyde'
+import clyde from '../../core/clyde'
 import Tooltip from './Tooltip'
 
 /**
@@ -16,7 +16,7 @@ export default function StressIndicator({
   showValue = true,
   size = 'md',
   interactive = false,
-  onChange
+  onChange,
 }) {
   const level = clyde.getStressLevel(value)
   const color = clyde.getStressColor(value)
@@ -24,7 +24,7 @@ export default function StressIndicator({
   const sizeClasses = {
     sm: 'stress-indicator-sm',
     md: 'stress-indicator-md',
-    lg: 'stress-indicator-lg'
+    lg: 'stress-indicator-lg',
   }
 
   const handleChange = (e) => {
@@ -61,7 +61,7 @@ export default function StressIndicator({
           className="stress-indicator-bar"
           style={{
             width: `${value}%`,
-            backgroundColor: color
+            backgroundColor: color,
           }}
           role="progressbar"
           aria-valuenow={value}

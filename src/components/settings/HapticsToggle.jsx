@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import haptics from '../../utils/haptics'
+import haptics from '../../core/haptics'
 
 /**
  * HapticsToggle - Einstellung für Vibrations-Feedback
@@ -84,7 +84,7 @@ export function HapticsTest() {
     { name: 'Wave', fn: () => haptics.wave() },
     { name: 'Success', fn: () => haptics.success() },
     { name: 'Relief', fn: () => haptics.relief() },
-    { name: 'Ground', fn: () => haptics.ground() }
+    { name: 'Ground', fn: () => haptics.ground() },
   ]
 
   return (

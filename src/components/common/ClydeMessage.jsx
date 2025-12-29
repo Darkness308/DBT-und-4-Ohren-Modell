@@ -1,4 +1,4 @@
-import clyde from '../../utils/clyde'
+import clyde from '../../core/clyde'
 import Button from './Button'
 
 /**
@@ -15,7 +15,7 @@ export default function ClydeMessage({
   variant = 'bubble',
   showAvatar = true,
   action,
-  onAction
+  onAction,
 }) {
   const text = message || children
 

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
-import clyde from '../../utils/clyde'
+import clyde from '../../core/clyde'
 
 /**
  * BioWave - Therapeutische Wellen-Visualisierung
@@ -22,7 +22,7 @@ export default function BioWave({
   mode = 'stress', // 'stress' | 'breathing' | 'urge'
   height = 120,
   showLabel = true,
-  className = ''
+  className = '',
 }) {
   const canvasRef = useRef(null)
   const animationRef = useRef(null)
@@ -112,12 +112,8 @@ export default function BioWave({
         // Haupt-Sinus mit leichter Variation für natürlicheren Look
         const y =
           baseline +
-          Math.sin(progress * Math.PI * 4 + time * frequency * Math.PI * 2) *
-            amplitude *
-            0.8 +
-          Math.sin(progress * Math.PI * 2 + time * frequency * Math.PI) *
-            amplitude *
-            0.2
+          Math.sin(progress * Math.PI * 4 + time * frequency * Math.PI * 2) * amplitude * 0.8 +
+          Math.sin(progress * Math.PI * 2 + time * frequency * Math.PI) * amplitude * 0.2
         ctx.lineTo(x, y)
       }
 
@@ -135,12 +131,8 @@ export default function BioWave({
         const progress = x / width
         const y =
           baseline +
-          Math.sin(progress * Math.PI * 4 + time * frequency * Math.PI * 2) *
-            amplitude *
-            0.8 +
-          Math.sin(progress * Math.PI * 2 + time * frequency * Math.PI) *
-            amplitude *
-            0.2
+          Math.sin(progress * Math.PI * 4 + time * frequency * Math.PI * 2) * amplitude * 0.8 +
+          Math.sin(progress * Math.PI * 2 + time * frequency * Math.PI) * amplitude * 0.2
         ctx.lineTo(x, y)
       }
       ctx.strokeStyle = color
@@ -155,9 +147,7 @@ export default function BioWave({
       ctx.shadowBlur = 0
 
       // Zeit vorrücken (Reduced Motion respektieren)
-      const prefersReducedMotion = window.matchMedia(
-        '(prefers-reduced-motion: reduce)'
-      ).matches
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       time += prefersReducedMotion ? 0.005 : 0.016
 
       animationRef.current = requestAnimationFrame(animate)

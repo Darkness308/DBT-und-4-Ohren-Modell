@@ -1,12 +1,12 @@
 import { createContext, useContext, useReducer, useEffect } from 'react'
-import { eventBus } from './utils/eventBus'
+import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
-import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
-import SkillFinder from './components/skill-finder/SkillFinder'
-import Dashboard from './components/dashboard/Dashboard'
+import VierOhrenAnalyzer from './modules/vier-ohren/VierOhrenAnalyzer'
+import SkillFinder from './modules/dbt-skills/SkillFinder'
+import Dashboard from './modules/dashboard/Dashboard'
 import Settings from './components/settings/Settings'
 
 // App Context
