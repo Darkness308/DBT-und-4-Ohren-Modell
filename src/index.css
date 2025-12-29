@@ -617,3 +617,114 @@ body {
 .clyde-bubble-action {
   @apply mt-3 flex gap-2;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BIO-WAVE - Therapeutische Wellen-Visualisierung
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.bio-wave-container {
+  @apply w-full;
+}
+
+.bio-wave-header {
+  @apply flex justify-between items-center mb-2 px-1;
+}
+
+.bio-wave-label {
+  @apply text-sm font-medium text-gray-600 dark:text-gray-400;
+}
+
+.bio-wave-value {
+  @apply font-mono font-bold text-lg;
+}
+
+.bio-wave-canvas-container {
+  @apply relative bg-gray-100 dark:bg-dark-elevated rounded-2xl overflow-hidden;
+  @apply border border-gray-200 dark:border-dark-border;
+}
+
+.bio-wave-canvas {
+  @apply w-full block;
+}
+
+.bio-wave-overlay {
+  @apply absolute inset-0 flex items-center justify-center pointer-events-none;
+}
+
+.bio-wave-timer {
+  @apply text-4xl opacity-20;
+}
+
+.bio-wave-hint {
+  @apply text-center text-sm text-gray-500 dark:text-gray-400 mt-2 italic;
+}
+
+/* Urge Wave Spezialisierung */
+.urge-wave-container {
+  @apply relative;
+}
+
+.urge-wave-timer-overlay {
+  @apply absolute inset-0 flex items-center justify-center pointer-events-none;
+}
+
+.urge-wave-time {
+  @apply text-4xl font-mono font-bold text-white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.urge-wave-message {
+  @apply text-center text-sm text-gray-500 dark:text-gray-400 mt-3;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   HAPTICS SETTINGS
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.haptics-toggle {
+  @apply flex items-center justify-between p-4 bg-gray-50 dark:bg-dark-elevated rounded-lg;
+  @apply border border-gray-200 dark:border-dark-border;
+}
+
+.haptics-toggle-label {
+  @apply flex items-center gap-3;
+}
+
+.haptics-toggle-icon {
+  @apply text-xl;
+}
+
+.haptics-toggle-text {
+  @apply font-medium text-gray-900 dark:text-white;
+}
+
+.haptics-toggle-hint {
+  @apply text-sm text-gray-500 dark:text-gray-400;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  @apply relative inline-flex h-6 w-11 items-center rounded-full cursor-pointer;
+  @apply transition-colors duration-200;
+}
+
+.toggle-switch.on {
+  @apply bg-calm-500;
+}
+
+.toggle-switch.off {
+  @apply bg-gray-300 dark:bg-gray-600;
+}
+
+.toggle-switch-knob {
+  @apply inline-block h-4 w-4 rounded-full bg-white shadow-md;
+  @apply transform transition-transform duration-200;
+}
+
+.toggle-switch.on .toggle-switch-knob {
+  @apply translate-x-6;
+}
+
+.toggle-switch.off .toggle-switch-knob {
+  @apply translate-x-1;
+}
