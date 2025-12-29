@@ -14,6 +14,29 @@ Eine therapeutische Web-App, die **DBT-Skills** (Dialektisch-Behaviorale Therapi
 | `docs/design-system.md` | UI/UX Guidelines, Farben, Komponenten |
 | `docs/dbt-skills-referenz.md` | Alle DBT-Skills mit Erklärungen |
 | `docs/vier-ohren-theorie.md` | Kommunikationsmodell-Grundlagen |
+| `docs/TECHNICAL_DEBT_ANALYSIS.md` | Technische Schulden & EKS-Strategie |
+| `docs/QUALITY_ASSESSMENT.md` | 10-Dimensionen Qualitätsbewertung |
+| `docs/PARETO_OPTIMIZATION.md` | 80/20 & 85/15 Optimierungsguide |
+
+---
+
+## 🤖 Claude Code Slash Commands
+
+Verfügbare Befehle in `.claude/commands/`:
+
+| Befehl | Beschreibung | Beispiel |
+|--------|--------------|----------|
+| `/analyze-quality` | 10-Dimensionen Qualitätsanalyse | `/analyze-quality src/agents` |
+| `/pareto-optimize` | Pareto-Optimierungen mit Web-Recherche | `/pareto-optimize performance` |
+| `/deep-analyze` | Tiefenanalyse mit Präzisionsgraden | `/deep-analyze deep src/agents` |
+
+**Nutzung:**
+```bash
+# Im Claude Code CLI
+/analyze-quality [bereich]           # z.B. components, agents
+/pareto-optimize [fokus]             # z.B. performance, accessibility
+/deep-analyze [tiefe] [bereich]      # tiefe: quick, standard, deep
+```
 
 ---
 
@@ -281,16 +304,16 @@ test: Tests hinzugefügt/geändert
 
 ## 📊 Status & Roadmap
 
-### Phase 1: MVP (aktuell)
-- [ ] Projekt-Setup (Vite + React + Tailwind)
-- [ ] Basis-Komponenten (Card, Button, Navigation)
-- [ ] Vier-Ohren-Analyzer (Kernfunktion)
-- [ ] Skill-Finder (Basis-Version)
+### Phase 1: MVP ✅
+- [x] Projekt-Setup (Vite + React + Tailwind)
+- [x] Basis-Komponenten (Card, Button, Navigation)
+- [x] Vier-Ohren-Analyzer (Kernfunktion)
+- [x] Skill-Finder (Basis-Version)
 
-### Phase 2: Core Features
+### Phase 2: Core Features (aktuell)
 - [ ] Chain Analysis Tool
 - [ ] Digitale Diary Card
-- [ ] LocalStorage-Persistenz
+- [x] LocalStorage-Persistenz (Basis)
 
 ### Phase 3: Erweiterungen
 - [ ] Imaginations-Übungen mit Audio
@@ -303,6 +326,12 @@ test: Tests hinzugefügt/geändert
 - [ ] Einstellungen & Personalisierung
 - [ ] PWA-Unterstützung
 - [ ] Accessibility-Audit
+
+### Technische Qualität
+- [x] Technical Debt Analyse erstellt
+- [x] 10-Dimensionen Qualitätsbewertung (B- 6.8/10)
+- [x] Pareto-Optimierungsguide erstellt
+- [x] Slash Commands für Analyse-Tools
 
 ---
 
