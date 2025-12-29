@@ -274,3 +274,346 @@ body {
 .dark .text-shadow {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CLYDE DESIGN SYSTEM
+   Der sichere Begleiter - Visuelles System für Notfall & Führung
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EMERGENCY OVERLAY - Volle Aufmerksamkeit, minimale kognitive Last
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.emergency-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #ef4444;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  animation: emergency-pulse 2s ease-in-out infinite;
+}
+
+@keyframes emergency-pulse {
+  0%, 100% { background: #ef4444; }
+  50% { background: #dc2626; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emergency-overlay {
+    animation: none;
+    background: #ef4444;
+  }
+}
+
+.emergency-content {
+  max-width: 500px;
+  width: 100%;
+}
+
+.emergency-title {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.emergency-message {
+  font-size: 1.25rem;
+  opacity: 0.95;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.emergency-skill {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.emergency-skill-icon {
+  font-size: 2.5rem;
+}
+
+.emergency-skill-text {
+  text-align: left;
+}
+
+.emergency-skill-name {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.emergency-skill-hint {
+  display: block;
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-top: 0.25rem;
+}
+
+.emergency-alternative {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+.emergency-alt-options {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.emergency-exit-btn {
+  background: white;
+  color: #ef4444;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.emergency-exit-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.emergency-exit-btn:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 3px;
+}
+
+.emergency-nordstern {
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.emergency-escape-hint {
+  position: absolute;
+  bottom: 20px;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.emergency-escape-hint kbd {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CLYDE EXPLAINS - Schüler-Erklärungen
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.clyde-explains {
+  @apply bg-calm-50 dark:bg-dark-elevated border-l-4 border-calm-500 rounded-lg p-4 my-4;
+}
+
+.clyde-explains-header {
+  @apply flex items-center gap-3 mb-3;
+}
+
+.clyde-avatar {
+  @apply w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm;
+  background: linear-gradient(135deg, #667eea, #7c3aed);
+  color: white;
+}
+
+.clyde-title {
+  @apply font-bold text-gray-900 dark:text-white;
+}
+
+.clyde-simple {
+  @apply text-gray-700 dark:text-gray-300 mb-3;
+}
+
+.clyde-science-toggle {
+  @apply text-sm text-calm-600 dark:text-calm-400 hover:text-calm-700 dark:hover:text-calm-300;
+  @apply bg-transparent border-none cursor-pointer p-0 mb-2;
+}
+
+.clyde-science {
+  @apply text-sm text-gray-600 dark:text-gray-400 italic pl-4 border-l-2 border-calm-300 dark:border-calm-600 mb-3;
+}
+
+.clyde-steps {
+  @apply list-decimal list-inside space-y-1 text-gray-700 dark:text-gray-300;
+}
+
+.clyde-steps li {
+  @apply py-1;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   TOOLTIP SYSTEM
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.tooltip-wrapper {
+  @apply inline-flex items-center;
+}
+
+.tooltip-trigger {
+  @apply inline-flex items-center gap-1 cursor-help;
+}
+
+.tooltip-icon {
+  @apply text-calm-500 dark:text-calm-400 text-sm opacity-70;
+}
+
+.tooltip-content {
+  @apply bg-gray-900 dark:bg-gray-800 text-white rounded-lg p-3 shadow-xl;
+  max-width: 280px;
+  z-index: 1000;
+  animation: tooltip-fade-in 0.15s ease-out;
+}
+
+@keyframes tooltip-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tooltip-title {
+  @apply font-bold text-sm mb-1;
+}
+
+.tooltip-text {
+  @apply text-sm text-gray-300 mb-2;
+}
+
+.tooltip-example {
+  @apply text-xs bg-gray-800 dark:bg-gray-700 rounded p-2 mt-2;
+}
+
+.tooltip-example-label {
+  @apply text-calm-400 font-semibold block mb-1;
+}
+
+.tooltip-example-text {
+  @apply text-gray-300 italic;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   STRESS INDICATOR - Ampel-System
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.stress-indicator {
+  @apply w-full;
+}
+
+.stress-indicator-sm { @apply text-sm; }
+.stress-indicator-md { @apply text-base; }
+.stress-indicator-lg { @apply text-lg; }
+
+.stress-indicator-header {
+  @apply flex justify-between items-center mb-2;
+}
+
+.stress-indicator-label {
+  @apply text-gray-600 dark:text-gray-400 text-sm font-medium;
+}
+
+.stress-indicator-status {
+  @apply font-bold text-sm uppercase tracking-wide;
+}
+
+.stress-indicator-bar-container {
+  @apply relative h-3 bg-gray-200 dark:bg-dark-elevated rounded-full overflow-hidden;
+}
+
+.stress-indicator-bar {
+  @apply h-full rounded-full transition-all duration-300;
+}
+
+.stress-indicator-markers {
+  @apply absolute inset-0 pointer-events-none;
+}
+
+.stress-indicator-markers .marker {
+  @apply absolute top-0 bottom-0 w-0.5 bg-white/30;
+}
+
+.stress-indicator-slider {
+  @apply w-full mt-2 cursor-pointer;
+}
+
+.stress-indicator-value {
+  @apply text-center font-mono font-bold text-2xl mt-2;
+}
+
+.stress-indicator-zones {
+  @apply flex justify-between text-xs text-gray-400 mt-1;
+}
+
+.stress-indicator-zones .zone {
+  @apply flex-1 text-center;
+}
+
+.zone-green { @apply text-green-500; }
+.zone-yellow { @apply text-yellow-500; }
+.zone-orange { @apply text-orange-500; }
+.zone-red { @apply text-red-500; }
+
+/* Stress Badges */
+.stress-badge {
+  @apply inline-block px-2 py-0.5 rounded text-xs font-semibold uppercase;
+}
+
+.stress-badge-green {
+  @apply bg-green-100 text-green-700 border border-green-300;
+  @apply dark:bg-green-900/30 dark:text-green-400 dark:border-green-700;
+}
+
+.stress-badge-yellow {
+  @apply bg-yellow-100 text-yellow-700 border border-yellow-300;
+  @apply dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-700;
+}
+
+.stress-badge-orange {
+  @apply bg-orange-100 text-orange-700 border border-orange-300;
+  @apply dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-700;
+}
+
+.stress-badge-red {
+  @apply bg-red-100 text-red-700 border border-red-300;
+  @apply dark:bg-red-900/30 dark:text-red-400 dark:border-red-700;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   CLYDE MESSAGE BUBBLE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.clyde-bubble {
+  @apply relative bg-calm-50 dark:bg-dark-elevated rounded-xl p-4 mb-4;
+  @apply border-l-4 border-calm-500;
+}
+
+.clyde-bubble::before {
+  content: 'C';
+  @apply absolute -left-3 -top-2 w-6 h-6 rounded-md flex items-center justify-center;
+  @apply text-xs font-bold text-white;
+  background: linear-gradient(135deg, #667eea, #7c3aed);
+}
+
+.clyde-bubble-text {
+  @apply text-gray-700 dark:text-gray-300 italic;
+}
+
+.clyde-bubble-action {
+  @apply mt-3 flex gap-2;
+}
