@@ -9,6 +9,7 @@ import PWAManager from './components/pwa/PWAManager'
 const VierOhrenAnalyzer = lazy(() => import('./modules/vier-ohren/VierOhrenAnalyzer'))
 const SkillFinder = lazy(() => import('./modules/dbt-skills/SkillFinder'))
 const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
+const DiaryCard = lazy(() => import('./modules/diary-card/DiaryCard'))
 const Settings = lazy(() => import('./components/settings/Settings'))
 
 // App Context
@@ -101,7 +102,7 @@ export function App() {
       case 'settings':
         return <Settings />
       case 'diary':
-        return <ComingSoon title="Diary Card" icon="📊" />
+        return <DiaryCard />
       case 'chain':
         return <ComingSoon title="Chain Analysis" icon="🔗" />
       default:
