@@ -13,8 +13,8 @@ export default function Tooltip({
   title,
   text,
   example,
-  position = 'top',
-  showIcon = true
+  position: _position = 'top', // Reserved for future positioning
+  showIcon = true,
 }) {
   const [isVisible, setIsVisible] = useState(false)
   const [coords, setCoords] = useState({ x: 0, y: 0 })
@@ -80,7 +80,7 @@ export default function Tooltip({
           style={{
             position: 'fixed',
             left: `${coords.x}px`,
-            top: `${coords.y}px`
+            top: `${coords.y}px`,
           }}
         >
           {title && <div className="tooltip-title">{title}</div>}
@@ -125,9 +125,7 @@ export function ClydeExplains({ skill, children }) {
         </button>
       )}
 
-      {showScience && skill.science && (
-        <p className="clyde-science">{skill.science}</p>
-      )}
+      {showScience && skill.science && <p className="clyde-science">{skill.science}</p>}
 
       {skill.steps && (
         <ol className="clyde-steps">

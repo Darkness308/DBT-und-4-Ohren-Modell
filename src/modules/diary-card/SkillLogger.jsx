@@ -37,8 +37,6 @@ export default function SkillLogger({ skillsUsed = [], onSkillAdd }) {
     skillFinder.markSkillUsed(skill.id, effectiveness)
   }
 
-  const modules = skillFinder.getAllModules()
-
   // Quick-Add Buttons für häufige Skills
   const quickSkills = [
     { id: 'tipp', name: 'TIPP', emoji: '🧊' },

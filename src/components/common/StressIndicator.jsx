@@ -115,17 +115,13 @@ export default function StressIndicator({
  */
 export function StressBadge({ min, max }) {
   let className = 'stress-badge stress-badge-green'
-  let label = 'GRÜN'
 
   if (min >= 80) {
     className = 'stress-badge stress-badge-red'
-    label = 'ROT'
   } else if (max > 60) {
     className = 'stress-badge stress-badge-orange'
-    label = 'ORANGE'
   } else if (max > 30) {
     className = 'stress-badge stress-badge-yellow'
-    label = 'GELB'
   }
 
   return (
