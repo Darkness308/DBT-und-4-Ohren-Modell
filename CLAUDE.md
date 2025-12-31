@@ -271,10 +271,10 @@ npm run lint         # Linting
 - [x] Core/Modules/Components Trennung
 - [x] Import-Pfade bereinigt
 
-### Phase 5: Erweiterungen (geplant)
+### Phase 5: Erweiterungen
 
+- [x] Digitale Diary Card (Emotionen, Urges, Skills, Stats)
 - [ ] Chain Analysis Tool
-- [ ] Digitale Diary Card
 - [ ] Imaginations-Übungen mit Audio
 - [ ] DEAR MAN Trainer
 
