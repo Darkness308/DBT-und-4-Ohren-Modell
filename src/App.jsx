@@ -1,13 +1,15 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
+import { createContext, useContext, useReducer, useEffect, lazy, Suspense } from 'react'
 import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
-import VierOhrenAnalyzer from './modules/vier-ohren/VierOhrenAnalyzer'
-import SkillFinder from './modules/dbt-skills/SkillFinder'
-import Dashboard from './modules/dashboard/Dashboard'
-import Settings from './components/settings/Settings'
+
+// Lazy-loaded modules für Code-Splitting
+const VierOhrenAnalyzer = lazy(() => import('./modules/vier-ohren/VierOhrenAnalyzer'))
+const SkillFinder = lazy(() => import('./modules/dbt-skills/SkillFinder'))
+const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
+const Settings = lazy(() => import('./components/settings/Settings'))
 
 // App Context
 const AppContext = createContext(null)
@@ -154,15 +156,32 @@ export function App() {
           </div>
         </header>
 
-        {/* Main Content mit Error Boundary */}
+        {/* Main Content mit Error Boundary + Suspense für Lazy Loading */}
         <main className="max-w-4xl mx-auto p-4 mt-4">
-          <ErrorBoundary>{renderModule()}</ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<ModuleLoader />}>{renderModule()}</Suspense>
+          </ErrorBoundary>
         </main>
 
         {/* Navigation */}
         <Navigation activeModule={state.activeModule} onNavigate={navigate} />
       </div>
     </AppContext.Provider>
+  )
+}
+
+// Loading Placeholder für Lazy-loaded Module
+function ModuleLoader() {
+  const { isDark } = useTheme()
+
+  return (
+    <div
+      className={`rounded-xl shadow-md p-8 text-center animate-pulse ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
+    >
+      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-calm-200 dark:bg-calm-800" />
+      <div className="h-6 w-48 mx-auto mb-2 rounded bg-calm-100 dark:bg-calm-900" />
+      <div className="h-4 w-32 mx-auto rounded bg-calm-50 dark:bg-calm-950" />
+    </div>
   )
 }
 
