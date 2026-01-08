@@ -50,6 +50,28 @@ export default {
           600: '#d97706',
         },
 
+        // ORANGE: Erhöhte Aufmerksamkeit (Stress 61-80%)
+        orange: {
+          100: '#ffedd5',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#ff6b35', // Haupt-Orange
+          600: '#ea580c',
+          700: '#c2410c',
+        },
+
+        // NOTFALL: Klares Rot (Stress 81-100%)
+        // Nur für echte Krisen - reduziert auf Essenz
+        error: {
+          50: '#fef2f2',
+          100: '#fee2e2',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444', // Notfall-Rot
+          600: '#dc2626',
+          700: '#b91c1c',
+        },
+
         // LAVENDEL: Stress-Reduktion
         // Senkt Cortisol, beruhigt bei hoher emotionaler Last
         lavender: {

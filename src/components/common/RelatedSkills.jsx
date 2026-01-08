@@ -4,8 +4,8 @@
  */
 
 import { useMemo } from 'react'
-import { dbtSkills, dbtModules } from '../../data/dbtSkills'
-import { useApp } from '../../App'
+import { dbtSkills, dbtModules } from '../../modules/dbt-skills/dbtSkills'
+import { useApp } from '../../contexts/AppContext'
 
 export default function RelatedSkills({ context, maxItems = 3 }) {
   const { navigate } = useApp()
@@ -17,44 +17,44 @@ export default function RelatedSkills({ context, maxItems = 3 }) {
     // Keywords und zugehörige Skill-Tags
     const keywordMappings = {
       // Kommunikation
-      'kommunikation': ['kommunikation', 'grenzen', 'wünsche'],
-      'konflikt': ['kommunikation', 'grenzen', 'stop'],
-      'streit': ['kommunikation', 'stop', 'emotionen'],
-      'missverständnis': ['kommunikation', 'klarheit'],
+      kommunikation: ['kommunikation', 'grenzen', 'wünsche'],
+      konflikt: ['kommunikation', 'grenzen', 'stop'],
+      streit: ['kommunikation', 'stop', 'emotionen'],
+      missverständnis: ['kommunikation', 'klarheit'],
 
       // Emotionen
-      'wut': ['impuls', 'schnell', 'akut'],
-      'ärger': ['impuls', 'schnell', 'stop'],
-      'angst': ['akut', 'körperlich', 'beruhigend'],
-      'trauer': ['emotionen', 'akzeptanz', 'durchleben'],
-      'stress': ['körperlich', 'schnell', 'beruhigend'],
+      wut: ['impuls', 'schnell', 'akut'],
+      ärger: ['impuls', 'schnell', 'stop'],
+      angst: ['akut', 'körperlich', 'beruhigend'],
+      trauer: ['emotionen', 'akzeptanz', 'durchleben'],
+      stress: ['körperlich', 'schnell', 'beruhigend'],
 
       // Situationen
-      'arbeit': ['kommunikation', 'grenzen', 'wünsche'],
-      'beziehung': ['kommunikation', 'beziehung', 'empathie'],
-      'familie': ['kommunikation', 'grenzen', 'beziehung']
+      arbeit: ['kommunikation', 'grenzen', 'wünsche'],
+      beziehung: ['kommunikation', 'beziehung', 'empathie'],
+      familie: ['kommunikation', 'grenzen', 'beziehung'],
     }
 
     // Finde relevante Tags
     const relevantTags = new Set()
     Object.entries(keywordMappings).forEach(([keyword, tags]) => {
       if (contextLower.includes(keyword)) {
-        tags.forEach(tag => relevantTags.add(tag))
+        tags.forEach((tag) => relevantTags.add(tag))
       }
     })
 
     // Fallback: Kommunikations-Skills für Vier-Ohren
     if (relevantTags.size === 0) {
-      ['kommunikation', 'klarheit', 'emotionen'].forEach(tag => relevantTags.add(tag))
+      ['kommunikation', 'klarheit', 'emotionen'].forEach((tag) => relevantTags.add(tag))
     }
 
     // Finde passende Skills
     return dbtSkills
-      .filter(skill => skill.tags.some(tag => relevantTags.has(tag)))
+      .filter((skill) => skill.tags.some((tag) => relevantTags.has(tag)))
       .slice(0, maxItems)
-      .map(skill => ({
+      .map((skill) => ({
         ...skill,
-        module: dbtModules[skill.module]
+        module: dbtModules[skill.module],
       }))
   }, [context, maxItems])
 
@@ -75,7 +75,7 @@ export default function RelatedSkills({ context, maxItems = 3 }) {
       </h4>
 
       <div className="space-y-2">
-        {relatedSkills.map(skill => (
+        {relatedSkills.map((skill) => (
           <button
             key={skill.id}
             onClick={() => handleSkillClick(skill.id)}
@@ -86,9 +86,7 @@ export default function RelatedSkills({ context, maxItems = 3 }) {
               <p className="font-medium text-gray-800 group-hover:text-calm-600 truncate">
                 {skill.name}
               </p>
-              <p className="text-xs text-gray-500 truncate">
-                {skill.shortDescription}
-              </p>
+              <p className="text-xs text-gray-500 truncate">{skill.shortDescription}</p>
             </div>
             <span className="text-gray-400 group-hover:text-calm-500">→</span>
           </button>
@@ -106,7 +104,7 @@ export default function RelatedSkills({ context, maxItems = 3 }) {
  * Kompakte Version für Inline-Nutzung
  */
 export function RelatedSkillsBadge({ skillId, onClick }) {
-  const skill = dbtSkills.find(s => s.id === skillId)
+  const skill = dbtSkills.find((s) => s.id === skillId)
   if (!skill) return null
 
   const module = dbtModules[skill.module]

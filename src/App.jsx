@@ -1,16 +1,18 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
-import { eventBus } from './utils/eventBus'
+import { useReducer, useEffect, useRef, lazy, Suspense } from 'react'
+import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
+import { AppContext } from './contexts/AppContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
-import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
-import SkillFinder from './components/skill-finder/SkillFinder'
-import Dashboard from './components/dashboard/Dashboard'
-import Settings from './components/settings/Settings'
 
-// App Context
-const AppContext = createContext(null)
+// Lazy-loaded modules für Code-Splitting
+const VierOhrenAnalyzer = lazy(() => import('./modules/vier-ohren/VierOhrenAnalyzer'))
+const SkillFinder = lazy(() => import('./modules/dbt-skills/SkillFinder'))
+const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
+const DiaryCard = lazy(() => import('./modules/diary-card/DiaryCard'))
+const ChainAnalysis = lazy(() => import('./modules/chain-analysis/ChainAnalysis'))
+const Settings = lazy(() => import('./components/settings/Settings'))
 
 const initialState = {
   activeModule: 'home',
@@ -51,6 +53,7 @@ function appReducer(state, action) {
 export function App() {
   const [state, dispatch] = useReducer(appReducer, initialState)
   const { isDark, toggleTheme } = useTheme()
+  const saveTimeoutRef = useRef(null)
 
   // Persistenz laden
   useEffect(() => {
@@ -65,9 +68,24 @@ export function App() {
     }
   }, [])
 
-  // Persistenz speichern
+  // Persistenz speichern (debounced für Performance)
   useEffect(() => {
-    localStorage.setItem('dbt-app-state', JSON.stringify(state))
+    // Vorherigen Timeout abbrechen
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+
+    // Neuen Timeout setzen (500ms Verzögerung)
+    saveTimeoutRef.current = setTimeout(() => {
+      localStorage.setItem('dbt-app-state', JSON.stringify(state))
+    }, 500)
+
+    // Cleanup bei Unmount
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
   }, [state])
 
   // Event-Bus Listener
@@ -99,9 +117,9 @@ export function App() {
       case 'settings':
         return <Settings />
       case 'diary':
-        return <ComingSoon title="Diary Card" icon="📊" />
+        return <DiaryCard />
       case 'chain':
-        return <ComingSoon title="Chain Analysis" icon="🔗" />
+        return <ChainAnalysis />
       default:
         return <Dashboard />
     }
@@ -154,9 +172,11 @@ export function App() {
           </div>
         </header>
 
-        {/* Main Content mit Error Boundary */}
+        {/* Main Content mit Error Boundary + Suspense für Lazy Loading */}
         <main className="max-w-4xl mx-auto p-4 mt-4">
-          <ErrorBoundary>{renderModule()}</ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<ModuleLoader />}>{renderModule()}</Suspense>
+          </ErrorBoundary>
         </main>
 
         {/* Navigation */}
@@ -166,33 +186,22 @@ export function App() {
   )
 }
 
-// Coming Soon Placeholder
-function ComingSoon({ title, icon }) {
+// Loading Placeholder für Lazy-loaded Module
+function ModuleLoader() {
   const { isDark } = useTheme()
 
   return (
     <div
-      className={`rounded-xl shadow-md p-8 text-center animate-fade-in transition-theme ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
+      className={`rounded-xl shadow-md p-8 text-center animate-pulse ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
     >
-      <span className="text-6xl mb-4 block">{icon}</span>
-      <h2
-        className={`text-2xl font-semibold mb-2 ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
-      >
-        {title}
-      </h2>
-      <p className={`mb-4 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}>
-        Dieses Modul wird bald verfügbar sein.
-      </p>
-      <div
-        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm ${isDark ? 'bg-calm-900/50 text-calm-300' : 'bg-calm-50 text-calm-700'}`}
-      >
-        <span className="animate-pulse">🔨</span>
-        <span>In Entwicklung</span>
-      </div>
+      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-calm-200 dark:bg-calm-800" />
+      <div className="h-6 w-48 mx-auto mb-2 rounded bg-calm-100 dark:bg-calm-900" />
+      <div className="h-4 w-32 mx-auto rounded bg-calm-50 dark:bg-calm-950" />
     </div>
   )
 }
 
-export const useApp = () => useContext(AppContext)
+// Re-export useApp für Abwärtskompatibilität
+export { useApp } from './contexts/AppContext'
 
 export default App
