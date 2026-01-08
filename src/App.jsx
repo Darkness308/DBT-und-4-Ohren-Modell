@@ -1,7 +1,6 @@
-import { useReducer, useEffect, useRef, lazy, Suspense } from 'react'
+import { createContext, useContext, useReducer, useEffect, useRef, lazy, Suspense } from 'react'
 import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
-import { AppContext } from './contexts/AppContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
@@ -13,6 +12,18 @@ const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
 const DiaryCard = lazy(() => import('./modules/diary-card/DiaryCard'))
 const ChainAnalysis = lazy(() => import('./modules/chain-analysis/ChainAnalysis'))
 const Settings = lazy(() => import('./components/settings/Settings'))
+
+// App Context (hier definiert, nicht importiert)
+const AppContext = createContext(null)
+
+// Loading-Komponente für Lazy-Loading
+function ModuleLoader() {
+  return (
+    <div className="flex items-center justify-center p-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-calm-500" />
+    </div>
+  )
+}
 
 const initialState = {
   activeModule: 'home',
@@ -186,22 +197,6 @@ export function App() {
   )
 }
 
-// Loading Placeholder für Lazy-loaded Module
-function ModuleLoader() {
-  const { isDark } = useTheme()
-
-  return (
-    <div
-      className={`rounded-xl shadow-md p-8 text-center animate-pulse ${isDark ? 'bg-dark-surface' : 'bg-white'}`}
-    >
-      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-calm-200 dark:bg-calm-800" />
-      <div className="h-6 w-48 mx-auto mb-2 rounded bg-calm-100 dark:bg-calm-900" />
-      <div className="h-4 w-32 mx-auto rounded bg-calm-50 dark:bg-calm-950" />
-    </div>
-  )
-}
-
-// Re-export useApp für Abwärtskompatibilität
-export { useApp } from './contexts/AppContext'
+export const useApp = () => useContext(AppContext)
 
 export default App

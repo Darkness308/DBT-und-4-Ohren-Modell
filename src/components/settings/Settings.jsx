@@ -8,14 +8,17 @@
 
 import { useState } from 'react'
 import { useTheme } from '../../contexts/ThemeContext'
+import { useApp } from '../../App'
 import ThemeToggle from './ThemeToggle'
 import DataManagement from './DataManagement'
 
 export default function Settings() {
   const { isDark } = useTheme()
+  const { navigate } = useApp()
   const [activeTab, setActiveTab] = useState('design')
 
   const tabs = [
+    { id: 'tools', label: 'Werkzeuge', icon: '🔧' },
     { id: 'design', label: 'Design', icon: '🎨' },
     { id: 'data', label: 'Daten', icon: '💾' },
   ]
@@ -54,6 +57,105 @@ export default function Settings() {
       <div
         className={`rounded-xl p-6 ${isDark ? 'bg-dark-surface border border-dark-border' : 'bg-white shadow-soft'}`}
       >
+        {activeTab === 'tools' && (
+          <div className="space-y-4">
+            <p className={`text-sm ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}>
+              Weitere therapeutische Werkzeuge für deine DBT-Arbeit
+            </p>
+
+            {/* Chain Analysis Tool */}
+            <button
+              onClick={() => navigate('chain')}
+              className={`w-full p-4 rounded-xl text-left transition-all ${
+                isDark
+                  ? 'bg-dark-elevated hover:bg-dark-hover border border-dark-border'
+                  : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🔗</span>
+                <div className="flex-1">
+                  <h4
+                    className={`font-semibold ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
+                  >
+                    Chain Analysis
+                  </h4>
+                  <p
+                    className={`text-sm mt-1 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}
+                  >
+                    Verhaltenskettenanalyse - Verstehe Auslöser und finde Interventionspunkte
+                  </p>
+                </div>
+                <span className={isDark ? 'text-darkText-secondary' : 'text-gray-400'}>→</span>
+              </div>
+            </button>
+
+            {/* DEAR MAN Trainer - Coming Soon */}
+            <div
+              className={`w-full p-4 rounded-xl opacity-60 ${
+                isDark
+                  ? 'bg-dark-elevated border border-dark-border'
+                  : 'bg-gray-50 border border-gray-200'
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">💬</span>
+                <div className="flex-1">
+                  <h4
+                    className={`font-semibold ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
+                  >
+                    DEAR MAN Trainer
+                  </h4>
+                  <p
+                    className={`text-sm mt-1 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}
+                  >
+                    Interaktiver Kommunikationstrainer - Bald verfügbar
+                  </p>
+                </div>
+                <span
+                  className={`text-xs px-2 py-1 rounded ${
+                    isDark ? 'bg-calm-900/50 text-calm-300' : 'bg-calm-100 text-calm-700'
+                  }`}
+                >
+                  Soon
+                </span>
+              </div>
+            </div>
+
+            {/* Imagination Exercises - Coming Soon */}
+            <div
+              className={`w-full p-4 rounded-xl opacity-60 ${
+                isDark
+                  ? 'bg-dark-elevated border border-dark-border'
+                  : 'bg-gray-50 border border-gray-200'
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <span className="text-3xl">🧘</span>
+                <div className="flex-1">
+                  <h4
+                    className={`font-semibold ${isDark ? 'text-darkText-primary' : 'text-gray-800'}`}
+                  >
+                    Imaginations-Übungen
+                  </h4>
+                  <p
+                    className={`text-sm mt-1 ${isDark ? 'text-darkText-secondary' : 'text-gray-500'}`}
+                  >
+                    Audio-geführte Entspannungsübungen - Bald verfügbar
+                  </p>
+                </div>
+                <span
+                  className={`text-xs px-2 py-1 rounded ${
+                    isDark ? 'bg-calm-900/50 text-calm-300' : 'bg-calm-100 text-calm-700'
+                  }`}
+                >
+                  Soon
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'design' && (
           <div className="space-y-6">
             <div>
