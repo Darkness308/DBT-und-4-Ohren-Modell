@@ -2,7 +2,7 @@
  * Dashboard - Hauptübersicht mit Statistiken und Quick-Actions
  */
 
-import { useApp } from '../../App'
+import { useApp } from '../../contexts/AppContext'
 import ModuleOverview from './ModuleOverview'
 import SkillUsageChart from './SkillUsageChart'
 import QuickActions from './QuickActions'

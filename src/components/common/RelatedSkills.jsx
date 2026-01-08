@@ -5,7 +5,7 @@
 
 import { useMemo } from 'react'
 import { dbtSkills, dbtModules } from '../../modules/dbt-skills/dbtSkills'
-import { useApp } from '../../App'
+import { useApp } from '../../contexts/AppContext'
 
 export default function RelatedSkills({ context, maxItems = 3 }) {
   const { navigate } = useApp()

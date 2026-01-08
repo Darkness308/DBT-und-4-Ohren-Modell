@@ -1,6 +1,7 @@
-import { createContext, useContext, useReducer, useEffect, lazy, Suspense } from 'react'
+import { useReducer, useEffect, useRef, lazy, Suspense } from 'react'
 import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
+import { AppContext } from './contexts/AppContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
@@ -11,9 +12,6 @@ const SkillFinder = lazy(() => import('./modules/dbt-skills/SkillFinder'))
 const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
 const DiaryCard = lazy(() => import('./modules/diary-card/DiaryCard'))
 const Settings = lazy(() => import('./components/settings/Settings'))
-
-// App Context
-const AppContext = createContext(null)
 
 const initialState = {
   activeModule: 'home',
@@ -54,6 +52,7 @@ function appReducer(state, action) {
 export function App() {
   const [state, dispatch] = useReducer(appReducer, initialState)
   const { isDark, toggleTheme } = useTheme()
+  const saveTimeoutRef = useRef(null)
 
   // Persistenz laden
   useEffect(() => {
@@ -68,9 +67,24 @@ export function App() {
     }
   }, [])
 
-  // Persistenz speichern
+  // Persistenz speichern (debounced für Performance)
   useEffect(() => {
-    localStorage.setItem('dbt-app-state', JSON.stringify(state))
+    // Vorherigen Timeout abbrechen
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+
+    // Neuen Timeout setzen (500ms Verzögerung)
+    saveTimeoutRef.current = setTimeout(() => {
+      localStorage.setItem('dbt-app-state', JSON.stringify(state))
+    }, 500)
+
+    // Cleanup bei Unmount
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
   }, [state])
 
   // Event-Bus Listener
@@ -213,6 +227,7 @@ function ComingSoon({ title, icon }) {
   )
 }
 
-export const useApp = () => useContext(AppContext)
+// Re-export useApp für Abwärtskompatibilität
+export { useApp } from './contexts/AppContext'
 
 export default App
