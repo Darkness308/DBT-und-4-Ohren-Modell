@@ -247,16 +247,25 @@ function TargetBehaviorStep({ data, onChange, isDark }) {
         </div>
       </div>
 
-      <input
-        type="date"
-        value={data.date}
-        onChange={(e) => onChange({ ...data, date: e.target.value })}
-        className={`w-full p-3 rounded-lg ${
-          isDark
-            ? 'bg-dark-elevated border-dark-border text-darkText-primary'
-            : 'bg-gray-50 border-gray-200 text-gray-900'
-        } border focus:ring-2 focus:ring-lavender-500`}
-      />
+      <div>
+        <label
+          htmlFor="target-date"
+          className={`text-sm mb-2 block ${isDark ? 'text-darkText-secondary' : 'text-gray-600'}`}
+        >
+          Wann ist das Verhalten aufgetreten?
+        </label>
+        <input
+          id="target-date"
+          type="date"
+          value={data.date}
+          onChange={(e) => onChange({ ...data, date: e.target.value })}
+          className={`w-full p-3 rounded-lg ${
+            isDark
+              ? 'bg-dark-elevated border-dark-border text-darkText-primary'
+              : 'bg-gray-50 border-gray-200 text-gray-900'
+          } border focus:ring-2 focus:ring-lavender-500`}
+        />
+      </div>
     </div>
   )
 }
