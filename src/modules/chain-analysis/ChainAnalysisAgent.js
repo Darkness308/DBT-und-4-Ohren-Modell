@@ -274,7 +274,7 @@ class ChainAnalysisAgent {
     // Häufigste Vulnerabilitäten
     const vulnCounts = {}
     this.analyses.forEach((a) => {
-      ;(a.vulnerabilities || []).forEach((v) => {
+      (a.vulnerabilities || []).forEach((v) => {
         vulnCounts[v] = (vulnCounts[v] || 0) + 1
       })
     })
@@ -306,7 +306,7 @@ class ChainAnalysisAgent {
     // Häufigste Skills in Lösungen
     const skillCounts = {}
     this.analyses.forEach((a) => {
-      ;(a.solutions || []).forEach((s) => {
+      (a.solutions || []).forEach((s) => {
         if (s.skillId) {
           skillCounts[s.skillId] = (skillCounts[s.skillId] || 0) + 1
         }
