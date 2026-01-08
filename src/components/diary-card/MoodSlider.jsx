@@ -47,7 +47,7 @@ export default function MoodSlider({ value, onChange }) {
             `}
             style={{
               backgroundColor: value === mood.value ? `${mood.color}20` : 'transparent',
-              ringColor: value === mood.value ? mood.color : 'transparent',
+              '--tw-ring-color': value === mood.value ? mood.color : 'transparent',
             }}
           >
             <span className="text-3xl mb-1">{mood.emoji}</span>
