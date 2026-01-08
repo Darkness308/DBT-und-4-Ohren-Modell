@@ -1,6 +1,7 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
-import { eventBus } from './utils/eventBus'
+import { useReducer, useEffect, useRef, lazy, Suspense } from 'react'
+import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
+import { AppContext } from './contexts/AppContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
@@ -11,8 +12,13 @@ import Settings from './components/settings/Settings'
 import DiaryCard from './components/diary-card/DiaryCard'
 import ChainAnalysis from './components/chain-analysis/ChainAnalysis'
 
-// App Context
-const AppContext = createContext(null)
+// Lazy-loaded modules für Code-Splitting
+const VierOhrenAnalyzer = lazy(() => import('./modules/vier-ohren/VierOhrenAnalyzer'))
+const SkillFinder = lazy(() => import('./modules/dbt-skills/SkillFinder'))
+const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
+const DiaryCard = lazy(() => import('./modules/diary-card/DiaryCard'))
+const ChainAnalysis = lazy(() => import('./modules/chain-analysis/ChainAnalysis'))
+const Settings = lazy(() => import('./components/settings/Settings'))
 
 const initialState = {
   activeModule: 'home',
@@ -53,6 +59,7 @@ function appReducer(state, action) {
 export function App() {
   const [state, dispatch] = useReducer(appReducer, initialState)
   const { isDark, toggleTheme } = useTheme()
+  const saveTimeoutRef = useRef(null)
 
   // Persistenz laden
   useEffect(() => {
@@ -67,9 +74,24 @@ export function App() {
     }
   }, [])
 
-  // Persistenz speichern
+  // Persistenz speichern (debounced für Performance)
   useEffect(() => {
-    localStorage.setItem('dbt-app-state', JSON.stringify(state))
+    // Vorherigen Timeout abbrechen
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+
+    // Neuen Timeout setzen (500ms Verzögerung)
+    saveTimeoutRef.current = setTimeout(() => {
+      localStorage.setItem('dbt-app-state', JSON.stringify(state))
+    }, 500)
+
+    // Cleanup bei Unmount
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+      }
+    }
   }, [state])
 
   // Event-Bus Listener
@@ -156,9 +178,11 @@ export function App() {
           </div>
         </header>
 
-        {/* Main Content mit Error Boundary */}
+        {/* Main Content mit Error Boundary + Suspense für Lazy Loading */}
         <main className="max-w-4xl mx-auto p-4 mt-4">
-          <ErrorBoundary>{renderModule()}</ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<ModuleLoader />}>{renderModule()}</Suspense>
+          </ErrorBoundary>
         </main>
 
         {/* Navigation */}

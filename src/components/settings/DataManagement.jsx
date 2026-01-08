@@ -3,9 +3,8 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { useApp } from '../../App'
+import { useApp } from '../../contexts/AppContext'
 import {
-  exportToJSON,
   exportToCSV,
   exportTherapyReport,
   exportFullBackup,

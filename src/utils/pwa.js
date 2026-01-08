@@ -11,8 +11,9 @@ export async function registerServiceWorker() {
   }
 
   try {
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-      scope: '/',
+    const base = import.meta.env.BASE_URL || '/'
+    const registration = await navigator.serviceWorker.register(`${base}sw.js`, {
+      scope: base,
     })
 
     console.log('[PWA] Service Worker registered:', registration.scope)
@@ -40,7 +41,10 @@ export async function registerServiceWorker() {
 export function activateUpdate(registration) {
   if (registration?.waiting) {
     registration.waiting.postMessage('skipWaiting')
-    window.location.reload()
+    // Zeige eine Bestätigungsabfrage, um Datenverlust zu vermeiden
+    if (window.confirm('Eine neue Version ist verfügbar. Ungespeicherte Daten könnten verloren gehen. Möchtest du die Seite neu laden?')) {
+      window.location.reload()
+    }
   }
 }
 
