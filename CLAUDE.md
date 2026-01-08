@@ -141,6 +141,26 @@ Verfügbare Befehle in `.claude/commands/`:
 │   │   │   ├── SkillUsageChart.jsx
 │   │   │   └── StreakCard.jsx
 │   │   │
+│   │   ├── diary-card/           # Diary Card (Tägliches Tracking)
+│   │   │   ├── DiaryCard.jsx
+│   │   │   ├── DiaryCardAgent.js
+│   │   │   ├── EmotionSlider.jsx
+│   │   │   ├── UrgeTracker.jsx
+│   │   │   ├── SkillLogger.jsx
+│   │   │   └── DayOverview.jsx
+│   │   │
+│   │   ├── chain-analysis/       # Verhaltenskettenanalyse
+│   │   │   ├── ChainAnalysis.jsx
+│   │   │   ├── ChainAnalysisAgent.js
+│   │   │   ├── AnalysisList.jsx
+│   │   │   └── steps/            # 6-Schritt Wizard
+│   │   │       ├── VulnerabilityStep.jsx
+│   │   │       ├── TriggerStep.jsx
+│   │   │       ├── ChainLinksStep.jsx
+│   │   │       ├── ProblemBehaviorStep.jsx
+│   │   │       ├── ConsequencesStep.jsx
+│   │   │       └── SolutionsStep.jsx
+│   │   │
 │   │   └── emergency/            # Notfall-UI
 │   │       └── EmergencyOverlay.jsx
 │   │
@@ -274,7 +294,7 @@ npm run lint         # Linting
 ### Phase 5: Erweiterungen
 
 - [x] Digitale Diary Card (Emotionen, Urges, Skills, Stats)
-- [ ] Chain Analysis Tool
+- [x] Chain Analysis Tool (6-Schritt Wizard: Vulnerabilität, Trigger, Kette, Verhalten, Konsequenzen, Lösungen)
 - [ ] Imaginations-Übungen mit Audio
 - [ ] DEAR MAN Trainer
 
