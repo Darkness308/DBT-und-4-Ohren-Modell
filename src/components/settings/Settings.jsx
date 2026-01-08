@@ -15,7 +15,7 @@ import DataManagement from './DataManagement'
 export default function Settings() {
   const { isDark } = useTheme()
   const { navigate } = useApp()
-  const [activeTab, setActiveTab] = useState('tools')
+  const [activeTab, setActiveTab] = useState('design')
 
   const tabs = [
     { id: 'tools', label: 'Werkzeuge', icon: '🔧' },
