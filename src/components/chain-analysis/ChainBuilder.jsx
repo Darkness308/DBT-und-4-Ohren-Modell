@@ -520,6 +520,7 @@ function ChainLinksStep({ data, onChange, isDark }) {
                 value={linkIntensity}
                 onChange={(e) => setLinkIntensity(parseInt(e.target.value))}
                 className="w-full"
+                aria-label="Intensität festlegen"
               />
             </div>
 
