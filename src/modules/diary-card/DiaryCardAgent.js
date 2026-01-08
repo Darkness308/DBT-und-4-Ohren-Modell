@@ -169,7 +169,7 @@ class DiaryCardAgent {
     // Skill-Nutzung
     const skillUsageCount = {}
     entries.forEach((entry) => {
-      ;(entry.skillsUsed || []).forEach((skill) => {
+      (entry.skillsUsed || []).forEach((skill) => {
         skillUsageCount[skill.skillId] = (skillUsageCount[skill.skillId] || 0) + 1
       })
     })
