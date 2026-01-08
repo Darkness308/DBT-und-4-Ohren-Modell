@@ -273,37 +273,41 @@ class ChainAnalysisAgent {
     return interventions.sort((a, b) => b.intensity - a.intensity)
   }
 
-  /**
-   * Schlägt Alternative für ein Kettenglied vor
-   */
-  suggestAlternative(link) {
-    const alternatives = {
-      thought: [
-        'Welche Fakten sprechen dagegen?',
-        'Was würde ich einem Freund sagen?',
-        'Ist das ein Gefühl oder ein Fakt?',
-      ],
-      emotion: [
-        'Gegenteiliges Handeln (Opposite Action)',
-        'Die Emotion benennen und akzeptieren',
-        'Körperliche Regulation (TIPP)',
-      ],
-      body: [
-        'Tiefes Atmen (4-7-8 Technik)',
-        'Progressive Muskelentspannung',
-        'Kaltes Wasser im Gesicht',
-      ],
-      urge: [
-        'Den Drang beobachten ohne zu handeln',
-        'Pro-Contra-Liste erstellen',
-        'Zeitverschiebung: 10 Minuten warten',
-      ],
-      behavior: ['STOP-Skill anwenden', 'Wise Mind konsultieren', 'Hilfe holen'],
-    }
+          /**
+           * Schlägt eine alternative, skills-orientierte Reaktionsmöglichkeit für ein Kettenglied vor.
+           *
+           * @param {Object} link - Das aktuelle Kettenglied, für das eine Alternative gesucht wird.
+           * @param {string} link.type - Der Typ des Kettenglieds (z.B. 'thought', 'emotion', 'body', 'urge', 'behavior').
+           * @returns {string|undefined} Eine zufällig ausgewählte Alternativ-Idee oder `undefined`, falls keine Option vorhanden ist.
+           */
+          suggestAlternative(link) {
+            const alternatives = {
+              thought: [
+                'Welche Fakten sprechen dagegen?',
+                'Was würde ich einem Freund sagen?',
+                'Ist das ein Gefühl oder ein Fakt?',
+              ],
+              emotion: [
+                'Gegenteiliges Handeln (Opposite Action)',
+                'Die Emotion benennen und akzeptieren',
+                'Körperliche Regulation (TIPP)',
+              ],
+              body: [
+                'Tiefes Atmen (4-7-8 Technik)',
+                'Progressive Muskelentspannung',
+                'Kaltes Wasser im Gesicht',
+              ],
+              urge: [
+                'Den Drang beobachten ohne zu handeln',
+                'Pro-Contra-Liste erstellen',
+                'Zeitverschiebung: 10 Minuten warten',
+              ],
+              behavior: ['STOP-Skill anwenden', 'Wise Mind konsultieren', 'Hilfe holen'],
+            }
 
-    const options = alternatives[link.type] || []
-    return options[Math.floor(Math.random() * options.length)]
-  }
+            const options = alternatives[link.type] || []
+            return options[Math.floor(Math.random() * options.length)]
+          }
 
   /**
    * Markiert eine Chain als abgeschlossen
