@@ -45,7 +45,7 @@ export default function RelatedSkills({ context, maxItems = 3 }) {
 
     // Fallback: Kommunikations-Skills für Vier-Ohren
     if (relevantTags.size === 0) {
-      ;['kommunikation', 'klarheit', 'emotionen'].forEach((tag) => relevantTags.add(tag))
+      ['kommunikation', 'klarheit', 'emotionen'].forEach((tag) => relevantTags.add(tag))
     }
 
     // Finde passende Skills
