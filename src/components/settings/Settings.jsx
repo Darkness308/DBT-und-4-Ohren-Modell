@@ -34,7 +34,7 @@ export default function Settings() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`
-              flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg
+              flex-1 min-w-0 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-3 px-1 sm:px-4 rounded-lg
               transition-all duration-200 font-medium text-sm
               ${
                 activeTab === tab.id

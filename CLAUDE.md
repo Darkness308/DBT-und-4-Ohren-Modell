@@ -40,6 +40,7 @@ Clyde spricht direkt zu Bonnie. Seine Stimme ist:
 | `docs/TECHNICAL_DEBT_ANALYSIS.md` | Technische Schulden & EKS-Strategie   |
 | `docs/QUALITY_ASSESSMENT.md`      | 10-Dimensionen Qualitätsbewertung     |
 | `docs/PARETO_OPTIMIZATION.md`     | 80/20 & 85/15 Optimierungsguide       |
+| `docs/SUPABASE_PLAN.md`           | Plan: gemeinsame Datenbank (Supabase) |
 
 ---
 
