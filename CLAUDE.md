@@ -37,7 +37,6 @@ Clyde spricht direkt zu Bonnie. Seine Stimme ist:
 | `docs/agents.md`                  | Agent-Architektur & Spezifikationen   |
 | `docs/design-system.md`           | UI/UX Guidelines, Farben, Komponenten |
 | `docs/dbt-skills-referenz.md`     | Alle DBT-Skills mit Erklärungen       |
-| `docs/vier-ohren-theorie.md`      | Kommunikationsmodell-Grundlagen       |
 | `docs/TECHNICAL_DEBT_ANALYSIS.md` | Technische Schulden & EKS-Strategie   |
 | `docs/QUALITY_ASSESSMENT.md`      | 10-Dimensionen Qualitätsbewertung     |
 | `docs/PARETO_OPTIMIZATION.md`     | 80/20 & 85/15 Optimierungsguide       |
@@ -115,12 +114,16 @@ Verfügbare Befehle in `.claude/commands/`:
 │   │   └── useHaptics.js         # React Hook für Haptics
 │   │
 │   ├── modules/                  # 📦 FEATURE-MODULE
-│   │   ├── vier-ohren/           # Kommunikations-Analyse
-│   │   │   ├── VierOhrenAnalyzer.jsx
-│   │   │   ├── VierOhrenAnalyzerAgent.js
-│   │   │   ├── AnalyzerForm.jsx
-│   │   │   ├── ResultDisplay.jsx
+│   │   ├── vier-ohren/           # Geführte Selbstanalyse (gemeint/gehört)
+│   │   │   ├── VierOhrenAnalyzer.jsx # Ansichten: Liste, Formular, Vergleich
+│   │   │   ├── analysisStore.js      # Datenmodell, Export/Import, Merge
+│   │   │   ├── GuidedForm.jsx
+│   │   │   ├── SituationList.jsx
+│   │   │   ├── SituationDetail.jsx
+│   │   │   ├── SharePanel.jsx
 │   │   │   ├── ExampleSelector.jsx
+│   │   │   ├── shareFile.js
+│   │   │   ├── levelStyles.js
 │   │   │   └── vierOhrenExamples.js
 │   │   │
 │   │   ├── dbt-skills/           # DBT Skill-Finder
@@ -295,6 +298,8 @@ npm run lint         # Linting
 
 - [x] Digitale Diary Card (Emotionen, Urges, Skills, Stats)
 - [x] Chain Analysis Tool (6-Schritt Wizard: Vulnerabilität, Trigger, Kette, Verhalten, Konsequenzen, Lösungen)
+- [x] Vier-Ohren: geführte Selbstanalyse statt generischer Textbausteine, Zwei-Personen-Vergleich per Export/Import
+- [ ] Vier-Ohren: gemeinsame Datenbank (Sync zwischen zwei Geräten)
 - [ ] Imaginations-Übungen mit Audio
 - [ ] DEAR MAN Trainer
 
