@@ -19,14 +19,24 @@ npm run dev
 # http://localhost:5173
 ```
 
+## Vier-Ohren-Modul: so nutzt ihr es zu zweit
+
+Die App deutet nichts automatisch. Jede Person trägt die eigene Sicht auf die vier Seiten einer Aussage ein (gemeint oder gehört). Die Daten liegen nur auf dem jeweiligen Gerät.
+
+1. Person A: **Analyzer → Neue Situation festhalten**, ausfüllen, speichern, **Diese Situation teilen** (JSON-Datei).
+2. Person B: Datei über **Datei importieren** einlesen, **Meine Sicht eintragen**. Die Sicht von A bleibt bis dahin verdeckt.
+3. Person B teilt die Situation zurück, Person A importiert. Beide sehen den Vergleich.
+
+Import führt zusammen (gleiche Eintrags-ID: der neuere Stand bleibt) und erzeugt keine Duplikate.
+
 ## Dokumentation
 
-| Datei | Beschreibung |
-|-------|--------------|
-| [CLAUDE.md](CLAUDE.md) | Haupt-Projektdokumentation |
-| [docs/](docs/) | Detaillierte Dokumentation |
+| Datei                                                              | Beschreibung                |
+| ------------------------------------------------------------------ | --------------------------- |
+| [CLAUDE.md](CLAUDE.md)                                             | Haupt-Projektdokumentation  |
+| [docs/](docs/)                                                     | Detaillierte Dokumentation  |
 | [docs/TECHNICAL_DEBT_ANALYSIS.md](docs/TECHNICAL_DEBT_ANALYSIS.md) | Technische Schulden-Analyse |
-| [docs/QUALITY_ASSESSMENT.md](docs/QUALITY_ASSESSMENT.md) | Qualitätsbewertung |
+| [docs/QUALITY_ASSESSMENT.md](docs/QUALITY_ASSESSMENT.md)           | Qualitätsbewertung          |
 
 ## Entwicklung
 

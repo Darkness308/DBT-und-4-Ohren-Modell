@@ -44,6 +44,9 @@ jobs:
         env:
           # Base URL für GitHub Pages
           VITE_BASE_URL: /${{ github.event.repository.name }}/
+          # Optional: gemeinsame Datenbank (siehe docs/SUPABASE_PLAN.md)
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
 
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v3

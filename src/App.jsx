@@ -1,6 +1,7 @@
-import { createContext, useContext, useReducer, useEffect, useRef, lazy, Suspense } from 'react'
+import { useReducer, useEffect, useRef, lazy, Suspense } from 'react'
 import { eventBus } from './core/eventBus'
 import { useTheme } from './contexts/ThemeContext'
+import { AppContext, useApp } from './contexts/AppContext'
 import Navigation from './components/common/Navigation'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import PWAManager from './components/pwa/PWAManager'
@@ -12,9 +13,6 @@ const Dashboard = lazy(() => import('./modules/dashboard/Dashboard'))
 const DiaryCard = lazy(() => import('./modules/diary-card/DiaryCard'))
 const ChainAnalysis = lazy(() => import('./modules/chain-analysis/ChainAnalysis'))
 const Settings = lazy(() => import('./components/settings/Settings'))
-
-// App Context (hier definiert, nicht importiert)
-const AppContext = createContext(null)
 
 // Loading-Komponente für Lazy-Loading
 function ModuleLoader() {
@@ -142,7 +140,7 @@ export function App() {
       case 'home':
         return { title: 'DBT Skills & Vier-Ohren', subtitle: 'Dein Dashboard' }
       case 'vier-ohren':
-        return { title: 'Vier-Ohren-Modell', subtitle: 'Kommunikation verstehen' }
+        return { title: 'Vier-Ohren-Modell', subtitle: 'Gemeint und gehört vergleichen' }
       case 'skills':
         return { title: 'Skill-Finder', subtitle: 'DBT-Skills entdecken' }
       case 'settings':
@@ -197,6 +195,7 @@ export function App() {
   )
 }
 
-export const useApp = () => useContext(AppContext)
+// Re-Export für bestehende Importe (ein gemeinsamer Context für alle Module)
+export { useApp }
 
 export default App

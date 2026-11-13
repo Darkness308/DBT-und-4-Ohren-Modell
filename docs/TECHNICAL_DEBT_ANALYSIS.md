@@ -1,4 +1,7 @@
 # Technische Schulden Analyse & EKS-Strategie
+
+> **Stand-Hinweis:** Dieses Dokument ist eine ältere Momentaufnahme. Es nennt `VierOhrenAnalyzerAgent`, `AnalyzerForm.jsx` und `ResultDisplay.jsx`; diese Dateien gibt es nicht mehr. Das Vier-Ohren-Modul ist jetzt eine geführte Selbstanalyse, beschrieben in `docs/agents.md` (Abschnitt „Vier-Ohren: geführte Selbstanalyse").
+
 ## DBT Skills & Vier-Ohren-Modell Web-App
 
 **Analysedatum:** 2025-12-29
@@ -181,6 +184,7 @@ export function saveToStorage(key, value) {
 ```
 
 **Problem:**
+
 - App.jsx nutzt `'dbt-app-state'` direkt
 - storage.js hat Prefix `'dbt-app-'`
 - Doppelte Daten, keine Konsistenz
@@ -202,6 +206,7 @@ case 'chain':
 ```
 
 **Problem:**
+
 - 2 von 6 Hauptmodulen sind Platzhalter
 - Dashboard zeigt "Skill-Nutzung Chart" ohne echte Diary-Daten
 - Keine Musteranalyse über Zeit möglich
@@ -220,6 +225,7 @@ case 'chain':
 ```
 
 Auch betroffen:
+
 - `SkillFinder.jsx:71` - `bg-white` statt Dark Mode aware
 - `ResultDisplay.jsx:21` - `bg-gray-50` statt Theme-aware
 - Dashboard Komponenten teilweise
@@ -238,6 +244,7 @@ export const vierOhrenAnalyzer = new VierOhrenAnalyzerAgent()
 ```
 
 **Problem:**
+
 - `analysisHistory` und `searchHistory` werden nie persistiert
 - Bei Reload verloren
 - Memory-Leak bei langen Sessions möglich
@@ -256,6 +263,7 @@ function FontSizeSelector() {
 ```
 
 Auch:
+
 - `ReducedMotionToggle` - State nicht gespeichert
 - Theme wird gespeichert, andere nicht
 
@@ -268,6 +276,7 @@ Auch:
 **Fundort:** Gesamte Codebasis
 
 Die Codebasis ist "TypeScript-ready" per JSDoc, aber:
+
 - Keine richtigen Interfaces für Agent-Kommunikation
 - Keine Typen für State-Objekte
 - Fehleranfälligkeit bei Refactoring
@@ -279,6 +288,7 @@ Die Codebasis ist "TypeScript-ready" per JSDoc, aber:
 ### 7. **NIEDRIG: Duplizierte Modul-Farblogik** 🟢
 
 **Fundort:**
+
 - `src/contexts/ThemeContext.jsx:22-55` (MODULE_COLORS)
 - `src/tailwind.config.js:92-98` (module colors)
 - `src/components/common/Navigation.jsx:10-15` (navItems mit colors)
@@ -306,6 +316,7 @@ const result = vierOhrenAnalyzer.analyzeStatement({...})
 ```
 
 **Potenzial:**
+
 - Leicht erweiterbar für neue Analyse-Features
 - AI-Integration (z.B. Claude API) problemlos möglich
 - Unit-Tests für Agents isoliert möglich
@@ -325,6 +336,7 @@ eventBus.on('skill:used', (data) => {
 ```
 
 **Potenzial:**
+
 - Analytics-Integration
 - Gamification (Achievements bei Events)
 - Sync mit Backend
@@ -334,6 +346,7 @@ eventBus.on('skill:used', (data) => {
 ### 3. **PWA-Infrastruktur** ⭐⭐⭐⭐
 
 Vollständige PWA mit:
+
 - Service Worker
 - Install Banner
 - Update Banner
@@ -341,6 +354,7 @@ Vollständige PWA mit:
 - Network Status Hook
 
 **Potenzial:**
+
 - Offline-First Diary Card
 - Push Notifications für Übungserinnerungen
 - Sync wenn wieder online
@@ -357,6 +371,7 @@ calm: {
 ```
 
 **Potenzial:**
+
 - Zertifizierung als therapeutisches Tool
 - Verkauf an Kliniken/Therapeuten
 - Academic Papers
@@ -373,6 +388,7 @@ calm: {
 ```
 
 **Potenzial:**
+
 - Skill-Empfehlungen basierend auf Diary-Einträgen
 - Chain Analysis → Skill-Vorschläge
 - Personalisierte Lernpfade
@@ -384,13 +400,16 @@ calm: {
 ### Aktuelle Stärken
 
 1. **Bottom Navigation** ✅
+
    ```javascript
    <nav className="fixed bottom-0 left-0 right-0 ...">
    ```
+
    - Mobile-First Pattern
    - Touch-freundliche Größe (min-w-[64px])
 
 2. **Responsive Grid** ✅
+
    ```javascript
    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
    ```
@@ -420,11 +439,11 @@ calm: {
 
 ### Aktuelle Keys
 
-| Key | Quelle | Inhalt |
-|-----|--------|--------|
-| `dbt-app-state` | App.jsx | Gesamter App-State |
-| `dbt-theme` | ThemeContext | 'light'/'dark'/'system' |
-| `dbt-app-*` | storage.js | Unused Wrapper |
+| Key             | Quelle       | Inhalt                  |
+| --------------- | ------------ | ----------------------- |
+| `dbt-app-state` | App.jsx      | Gesamter App-State      |
+| `dbt-theme`     | ThemeContext | 'light'/'dark'/'system' |
+| `dbt-app-*`     | storage.js   | Unused Wrapper          |
 
 ### Datenstruktur (dbt-app-state)
 
@@ -486,21 +505,21 @@ User-Input
 
 ### Cross-Verlinkungen
 
-| Von | Nach | Mechanismus | Status |
-|-----|------|-------------|--------|
-| VierOhren Result | Skills | RelatedSkills.jsx | ✅ Aktiv |
-| SkillDetail | Related Skills | skill.relatedSkills | ✅ Daten vorhanden |
-| Dashboard | Alle Module | QuickActions | ✅ Aktiv |
-| Skill Usage | Dashboard Chart | eventBus + State | ✅ Aktiv |
+| Von              | Nach            | Mechanismus         | Status             |
+| ---------------- | --------------- | ------------------- | ------------------ |
+| VierOhren Result | Skills          | RelatedSkills.jsx   | ✅ Aktiv           |
+| SkillDetail      | Related Skills  | skill.relatedSkills | ✅ Daten vorhanden |
+| Dashboard        | Alle Module     | QuickActions        | ✅ Aktiv           |
+| Skill Usage      | Dashboard Chart | eventBus + State    | ✅ Aktiv           |
 
 ### Fehlende Verbindungen
 
-| Von | Nach | Potenzial |
-|-----|------|-----------|
-| Diary Entry | Skill Empfehlung | HOCH - Personalisierung |
-| Chain Analysis | Skill Matching | HOCH - Interventionspunkte |
-| Skill History | Pattern Analysis | MITTEL - Insights |
-| Settings | Export Email | NIEDRIG - Nice-to-have |
+| Von            | Nach             | Potenzial                  |
+| -------------- | ---------------- | -------------------------- |
+| Diary Entry    | Skill Empfehlung | HOCH - Personalisierung    |
+| Chain Analysis | Skill Matching   | HOCH - Interventionspunkte |
+| Skill History  | Pattern Analysis | MITTEL - Insights          |
+| Settings       | Export Email     | NIEDRIG - Nice-to-have     |
 
 ---
 
@@ -531,12 +550,14 @@ Verstehen          Anwenden            Verbessern
 #### **Schritt 1: DIARY CARD** (Höchster Multiplikator)
 
 **Warum zuerst?**
+
 1. **Datenbasis** für alle anderen Features
 2. **Tägliche Nutzung** bindet User
 3. **Emotionstracking** informiert Skill-Empfehlungen
 4. **Visualisierung** zeigt Fortschritt
 
 **Minimale Implementation:**
+
 ```javascript
 // DairyCard Modul mit:
 - Emotion Slider (1-5)
@@ -552,6 +573,7 @@ Verstehen          Anwenden            Verbessern
 #### **Schritt 2: ÜBUNGSMODUS VIER-OHREN**
 
 **Warum zweitens?**
+
 1. VierOhrenAnalyzer hat bereits `generateExercise()` und `validateUserAnswer()`
 2. UI fehlt nur
 3. Erhöht Lerntiefe
@@ -563,11 +585,13 @@ Verstehen          Anwenden            Verbessern
 #### **Schritt 3: PERSISTENZ KONSOLIDIEREN**
 
 **Warum drittens?**
+
 1. Technische Schulden abbauen
 2. Export/Import funktioniert sauber
 3. Basis für Sync-Features
 
 **Todo:**
+
 - storage.js in App.jsx nutzen
 - Agent-History persistieren
 - Settings komplett speichern
@@ -579,6 +603,7 @@ Verstehen          Anwenden            Verbessern
 #### **Schritt 4: CHAIN ANALYSIS**
 
 **Warum viertens?**
+
 1. Baut auf Diary-Daten auf
 2. Komplexeste UI
 3. Kann Muster aus Diary erkennen
@@ -612,15 +637,19 @@ Verstehen          Anwenden            Verbessern
    Kein Schema-Validierung beim Laden von localStorage. Korrupte Daten = App crash.
 
 3. **Copy-Paste Dark Mode**
+
    ```javascript
    ${isDark ? 'bg-dark-surface' : 'bg-white'}
    ```
+
    Das steht in ~15 Komponenten. Ein `<Card>` Wrapper würde das lösen.
 
 4. **Unused Parameters**
+
    ```javascript
    generateGenericAnalysis(statement, _context, _perspective)
    ```
+
    Die Unterstriche zeigen: "Wir wissen, dass wir es nicht nutzen." Warum dann die API?
 
 5. **Singleton Memory Leak**
@@ -633,14 +662,14 @@ Verstehen          Anwenden            Verbessern
 
 ## Zusammenfassung: EKS-Priorisierung
 
-| Prio | Task | Impact | Aufwand | ROI |
-|------|------|--------|---------|-----|
-| 1 | Diary Card implementieren | ⭐⭐⭐⭐⭐ | 3 Tage | Sehr hoch |
-| 2 | Übungsmodus Vier-Ohren | ⭐⭐⭐⭐ | 1 Tag | Hoch |
-| 3 | Dark Mode konsolidieren | ⭐⭐⭐ | 0.5 Tage | Mittel |
-| 4 | Persistenz fixen | ⭐⭐⭐ | 1 Tag | Mittel |
-| 5 | Chain Analysis | ⭐⭐⭐⭐ | 4 Tage | Hoch |
-| 6 | TypeScript Migration | ⭐⭐ | 3 Tage | Langfristig |
+| Prio | Task                      | Impact     | Aufwand  | ROI         |
+| ---- | ------------------------- | ---------- | -------- | ----------- |
+| 1    | Diary Card implementieren | ⭐⭐⭐⭐⭐ | 3 Tage   | Sehr hoch   |
+| 2    | Übungsmodus Vier-Ohren    | ⭐⭐⭐⭐   | 1 Tag    | Hoch        |
+| 3    | Dark Mode konsolidieren   | ⭐⭐⭐     | 0.5 Tage | Mittel      |
+| 4    | Persistenz fixen          | ⭐⭐⭐     | 1 Tag    | Mittel      |
+| 5    | Chain Analysis            | ⭐⭐⭐⭐   | 4 Tage   | Hoch        |
+| 6    | TypeScript Migration      | ⭐⭐       | 3 Tage   | Langfristig |
 
 ---
 
@@ -663,4 +692,4 @@ Legende:
 
 ---
 
-*Erstellt mit Claude Code (Opus 4.5) am 2025-12-29*
+_Erstellt mit Claude Code (Opus 4.5) am 2025-12-29_

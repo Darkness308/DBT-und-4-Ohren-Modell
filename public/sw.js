@@ -3,11 +3,16 @@
  * Ermöglicht Offline-Nutzung und verbesserte Performance
  */
 
-const CACHE_NAME = 'dbt-skills-v1'
+const CACHE_NAME = 'dbt-skills-v2'
+// Name bleibt bei v1: So überleben die bereits gecachten Bundles ein Update
+// des Service Workers, und die App startet danach auch offline.
 const RUNTIME_CACHE = 'dbt-runtime-v1'
 
 // Statische Assets zum Cachen beim Install
-const STATIC_ASSETS = ['/', '/index.html', '/manifest.json']
+// Relativ zum Service-Worker-Pfad, damit es auch unter einem Unterpfad
+// (GitHub Pages: /<repo>/) funktioniert
+const STATIC_ASSETS = ['./', './index.html', './manifest.json']
+const INDEX_URL = new URL('./index.html', self.location).href
 
 // Install Event - Cache statische Assets
 self.addEventListener('install', (event) => {
@@ -85,7 +90,7 @@ self.addEventListener('fetch', (event) => {
               return cachedResponse
             }
             // Fallback zu index.html für SPA
-            return caches.match('/index.html')
+            return caches.match(INDEX_URL)
           })
         })
     )
@@ -168,11 +173,11 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body || 'Zeit für deine tägliche Skill-Übung!',
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-72x72.png',
+    icon: new URL('./icons/icon-192x192.png', self.location).href,
+    badge: new URL('./icons/icon-192x192.png', self.location).href,
     vibrate: [100, 50, 100],
     data: {
-      url: data.url || '/',
+      url: data.url || self.registration.scope,
     },
     actions: [
       { action: 'open', title: 'Öffnen' },
@@ -191,7 +196,7 @@ self.addEventListener('notificationclick', (event) => {
     return
   }
 
-  const url = event.notification.data?.url || '/'
+  const url = event.notification.data?.url || self.registration.scope
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
