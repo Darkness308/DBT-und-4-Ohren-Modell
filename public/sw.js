@@ -4,7 +4,9 @@
  */
 
 const CACHE_NAME = 'dbt-skills-v2'
-const RUNTIME_CACHE = 'dbt-runtime-v2'
+// Name bleibt bei v1: So überleben die bereits gecachten Bundles ein Update
+// des Service Workers, und die App startet danach auch offline.
+const RUNTIME_CACHE = 'dbt-runtime-v1'
 
 // Statische Assets zum Cachen beim Install
 // Relativ zum Service-Worker-Pfad, damit es auch unter einem Unterpfad

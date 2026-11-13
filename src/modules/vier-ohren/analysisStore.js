@@ -25,12 +25,24 @@ const MAX_TEXT = 4000
 const MAX_NAME = 60
 const MAX_ID = 80
 
-/** Eindeutige ID (UUID wenn verfügbar) */
+/**
+ * Eindeutige ID, immer im UUID-Format (v4).
+ * Die geplante Datenbank speichert id und situation_id als uuid.
+ */
 export function newId() {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID()
   }
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`
+  const bytes = new Uint8Array(16)
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    crypto.getRandomValues(bytes)
+  } else {
+    for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256)
+  }
+  bytes[6] = (bytes[6] & 0x0f) | 0x40 // Version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80 // Variante RFC 4122
+  const hex = [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
 }
 
 function cleanText(value, max = MAX_TEXT) {
@@ -209,28 +221,51 @@ export function parseImport(text) {
 
 /**
  * Importierte Einträge mit den lokalen zusammenführen.
- * Gleiche ID: der Eintrag mit dem neueren updatedAt bleibt.
+ *
+ * - Neue ID: Eintrag wird übernommen.
+ * - Bekannte ID: nur ein neuerer Stand (updatedAt) ändert etwas, und dann
+ *   nur Rolle und Antworten. Autor, Situation, Aussage, Kontext und
+ *   createdAt bleiben wie lokal (wie in der App nicht änderbar).
+ * - Mit ownerId: Einträge dieser Person werden durch einen Import nie
+ *   geändert. Nur sie selbst bearbeitet ihre Sicht.
  */
-export function mergeEntries(local, incoming) {
+export function mergeEntries(local, incoming, { ownerId = null } = {}) {
   const byId = new Map(local.map((e) => [e.id, e]))
   let added = 0
   let updated = 0
   let unchanged = 0
+  let rejected = 0
 
   incoming.forEach((entry) => {
     const existing = byId.get(entry.id)
     if (!existing) {
       byId.set(entry.id, entry)
       added++
-    } else if (entry.updatedAt > existing.updatedAt) {
-      byId.set(entry.id, entry)
-      updated++
-    } else {
+    } else if (entry.updatedAt <= existing.updatedAt) {
       unchanged++
+    } else if (
+      (ownerId && existing.author.id === ownerId) ||
+      entry.author.id !== existing.author.id ||
+      entry.situationId !== existing.situationId
+    ) {
+      rejected++
+    } else {
+      byId.set(entry.id, {
+        ...existing,
+        role: entry.role,
+        levels: entry.levels,
+        updatedAt: entry.updatedAt,
+      })
+      updated++
     }
   })
 
-  return { entries: [...byId.values()], added, updated, unchanged }
+  return { entries: [...byId.values()], added, updated, unchanged, rejected }
+}
+
+/** Rohdaten (z.B. aus einem Backup) prüfen; Unlesbares wird verworfen */
+export function sanitizeEntries(rawEntries) {
+  return Array.isArray(rawEntries) ? rawEntries.map(sanitizeEntry).filter(Boolean) : []
 }
 
 // --- Persistenz (LocalStorage dieses Geräts) ---
@@ -251,4 +286,29 @@ export function loadProfile() {
 
 export function saveProfile(profile) {
   return saveToStorage(PROFILE_KEY, profile)
+}
+
+// --- Vollständiges Backup (Einstellungen → Daten) ---
+
+/** Vier-Ohren-Daten dieses Geräts für das vollständige Backup */
+export function getBackupData() {
+  return { entries: loadEntries(), profile: loadProfile() }
+}
+
+/**
+ * Vier-Ohren-Daten aus einem vollständigen Backup zurückholen.
+ * Einträge werden zusammengeführt. Das Profil wird nur gesetzt, wenn auf
+ * diesem Gerät noch keines existiert.
+ */
+export function restoreBackupData(data) {
+  if (!data || typeof data !== 'object') return { added: 0, updated: 0 }
+
+  if (!loadProfile() && typeof data.profile?.id === 'string' && data.profile.id.length <= MAX_ID) {
+    const name = cleanText(data.profile.name, MAX_NAME)
+    if (name) saveProfile({ id: data.profile.id, name })
+  }
+
+  const result = mergeEntries(loadEntries(), sanitizeEntries(data.entries))
+  saveEntries(result.entries)
+  return { added: result.added, updated: result.updated }
 }

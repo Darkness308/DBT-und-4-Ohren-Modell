@@ -87,5 +87,9 @@ select vo_test.expect((select count(*) from public.vier_ohren_entries) = 0, 'Dri
 select set_config('request.jwt.claim.sub', :'anna', false);
 select vo_test.expect_error(format($$insert into public.vier_ohren_entries (id, space_id, situation_id, role, statement, created_at, updated_at) values (gen_random_uuid(), %L, gen_random_uuid(), 'zuschauer', 'x', now(), now())$$, :'space'), 'Unbekannte Rolle wird abgelehnt');
 select vo_test.expect_error(format($$insert into public.vier_ohren_entries (id, space_id, situation_id, role, statement, created_at, updated_at) values (gen_random_uuid(), %L, gen_random_uuid(), 'sender', repeat('x', 4001), now(), now())$$, :'space'), 'Zu langer Text wird abgelehnt');
+select vo_test.expect_error(format($$insert into public.vier_ohren_entries (id, space_id, situation_id, role, statement, levels, created_at, updated_at) values (gen_random_uuid(), %L, gen_random_uuid(), 'sender', 'x', jsonb_build_object('sachebene', repeat('x', 4001)), now(), now())$$, :'space'), 'Zu langes Antwortfeld wird abgelehnt');
+insert into public.vier_ohren_entries (id, space_id, situation_id, role, statement, levels, created_at, updated_at)
+values (gen_random_uuid(), :'space', gen_random_uuid(), 'sender', 'x', jsonb_build_object('sachebene', repeat('ä😀', 2000), 'selbstoffenbarung', repeat('ä😀', 2000), 'beziehungsebene', repeat('ä😀', 2000), 'appellseite', repeat('ä😀', 2000)), now(), now());
+select vo_test.expect(true, 'Vier volle Felder mit Umlauten und Emoji werden angenommen');
 reset role;
 \echo ALLE PRUEFUNGEN BESTANDEN

@@ -60,10 +60,13 @@ export default function VierOhrenAnalyzer() {
   const handleImportFile = async (file) => {
     try {
       const { entries: incoming, skipped } = parseImport(await file.text())
-      const result = mergeEntries(entries, incoming)
+      const result = mergeEntries(entries, incoming, { ownerId: profile.id })
       setEntries(result.entries)
       setMessage(
         `Import fertig: ${result.added} neu, ${result.updated} aktualisiert, ${result.unchanged} unverändert` +
+          (result.rejected
+            ? `, ${result.rejected} abgelehnt (fremde Änderung an bestehendem Eintrag)`
+            : '') +
           (skipped ? `, ${skipped} übersprungen (unlesbar).` : '.')
       )
     } catch (error) {

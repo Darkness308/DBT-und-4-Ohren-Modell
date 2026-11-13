@@ -10,6 +10,8 @@ import {
   buildExport,
   parseImport,
   mergeEntries,
+  newId,
+  sanitizeEntries,
 } from '../modules/vier-ohren/analysisStore'
 
 const anna = { id: 'p-anna', name: 'Anna' }
@@ -156,5 +158,63 @@ describe('mergeEntries', () => {
     expect(second.updated).toBe(0)
     expect(second.unchanged).toBe(2)
     expect(second.entries.find((e) => e.id === mine.id).levels.sachebene).toBe('Neuer Stand')
+  })
+
+  it('ändert bei bekannter ID nur Rolle und Antworten, nie Autor, Situation oder Aussage', () => {
+    const theirs = createEntry({ ...base, author: ben, role: 'receiver' }, t0)
+    const tampered = {
+      ...theirs,
+      statement: 'Etwas ganz anderes',
+      context: 'anderer Kontext',
+      createdAt: t2.toISOString(),
+      levels: { ...theirs.levels, sachebene: 'Bens neuer Stand' },
+      updatedAt: t1.toISOString(),
+    }
+    const result = mergeEntries([theirs], [tampered], { ownerId: anna.id })
+    expect(result.updated).toBe(1)
+    expect(result.entries[0].statement).toBe(theirs.statement)
+    expect(result.entries[0].context).toBe(theirs.context)
+    expect(result.entries[0].createdAt).toBe(theirs.createdAt)
+    expect(result.entries[0].levels.sachebene).toBe('Bens neuer Stand')
+  })
+
+  it('lehnt Importe ab, die den Autor oder die Situation eines Eintrags ändern', () => {
+    const theirs = createEntry({ ...base, author: ben, role: 'receiver' }, t0)
+    const otherAuthor = { ...theirs, author: anna, updatedAt: t1.toISOString() }
+    const otherSituation = { ...theirs, situationId: 'andere', updatedAt: t1.toISOString() }
+    const result = mergeEntries([theirs], [otherAuthor, otherSituation])
+    expect(result.rejected).toBe(2)
+    expect(result.entries).toEqual([theirs])
+  })
+
+  it('lässt eigene Einträge durch einen Import unverändert', () => {
+    const mine = createEntry(base, t0)
+    const foreignEdit = updateEntry(mine, { levels: { sachebene: 'von außen' } }, t1)
+    const result = mergeEntries([mine], [foreignEdit], { ownerId: anna.id })
+    expect(result.rejected).toBe(1)
+    expect(result.entries).toEqual([mine])
+  })
+})
+
+describe('newId / sanitizeEntries', () => {
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+
+  it('erzeugt UUIDs, auch ohne crypto.randomUUID', () => {
+    expect(newId()).toMatch(uuid)
+    const original = globalThis.crypto.randomUUID
+    try {
+      globalThis.crypto.randomUUID = undefined
+      const ids = new Set(Array.from({ length: 50 }, newId))
+      expect(ids.size).toBe(50)
+      ids.forEach((id) => expect(id).toMatch(uuid))
+    } finally {
+      globalThis.crypto.randomUUID = original
+    }
+  })
+
+  it('verwirft Unlesbares aus Backup-Daten', () => {
+    const good = createEntry(base, t0)
+    expect(sanitizeEntries([good, { id: 1 }, null])).toEqual([good])
+    expect(sanitizeEntries('kaputt')).toEqual([])
   })
 })

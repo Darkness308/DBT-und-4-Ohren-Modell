@@ -13,7 +13,7 @@ offline nutzbar; abgeglichen wird, sobald eine Verbindung besteht.
 
 | Teil                                                    | Datei                                                  | Geprüft                                                                       |
 | ------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| Datenbankschema, Zugriffsregeln, Raum anlegen/beitreten | `supabase/migrations/0001_vier_ohren_shared_space.sql` | Ja, 24 Prüfungen in `supabase/tests/rls_test.sql` gegen lokales PostgreSQL 16 |
+| Datenbankschema, Zugriffsregeln, Raum anlegen/beitreten | `supabase/migrations/0001_vier_ohren_shared_space.sql` | Ja, 26 Prüfungen in `supabase/tests/rls_test.sql` gegen lokales PostgreSQL 16 |
 | Platzhalter für die Zugangsdaten                        | `.env.example`                                         | –                                                                             |
 
 Der lokale Test ersetzt Supabase durch einen Nachbau (`supabase/tests/local_auth_stub.sql`:

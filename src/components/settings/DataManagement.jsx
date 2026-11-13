@@ -17,6 +17,7 @@ import {
   getBackupStats,
   formatBytes,
 } from '../../utils/backup'
+import { getBackupData, restoreBackupData } from '../../modules/vier-ohren/analysisStore'
 
 export default function DataManagement() {
   const { state, dispatch } = useApp()
@@ -48,7 +49,8 @@ export default function DataManagement() {
   }
 
   const handleExportJSON = () => {
-    exportFullBackup(state)
+    // Vier-Ohren-Einträge liegen in eigenen Speicher-Schlüsseln, nicht im App-State
+    exportFullBackup({ ...state, vierOhren: getBackupData() })
     showMessage('Backup als JSON exportiert')
   }
 
@@ -79,7 +81,9 @@ export default function DataManagement() {
 
     try {
       const backup = await importBackup(file)
-      dispatch({ type: 'LOAD_STATE', payload: backup.data })
+      const { vierOhren, ...appData } = backup.data
+      dispatch({ type: 'LOAD_STATE', payload: appData })
+      restoreBackupData(vierOhren)
       showMessage('Backup erfolgreich importiert')
     } catch (error) {
       showMessage(error.message, 'error')

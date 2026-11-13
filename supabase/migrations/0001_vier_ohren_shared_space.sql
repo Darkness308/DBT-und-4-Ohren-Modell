@@ -36,8 +36,17 @@ create table public.vier_ohren_entries (
   statement text not null check (char_length(statement) between 1 and 4000),
   context text not null default '' check (char_length(context) <= 4000),
   -- { sachebene, selbstoffenbarung, beziehungsebene, appellseite }
+  -- Je Feld dieselbe Grenze wie in der App (4000 Zeichen); die Gesamtgröße
+  -- deckt vier volle Felder auch mit Mehrbyte-Zeichen ab.
   levels jsonb not null default '{}'::jsonb
-    check (jsonb_typeof(levels) = 'object' and pg_column_size(levels) <= 20000),
+    check (
+      jsonb_typeof(levels) = 'object'
+      and octet_length(levels::text) <= 70000
+      and char_length(coalesce(levels ->> 'sachebene', '')) <= 4000
+      and char_length(coalesce(levels ->> 'selbstoffenbarung', '')) <= 4000
+      and char_length(coalesce(levels ->> 'beziehungsebene', '')) <= 4000
+      and char_length(coalesce(levels ->> 'appellseite', '')) <= 4000
+    ),
   -- Zeitstempel des Geräts (für "neuerer Stand bleibt")
   created_at timestamptz not null,
   updated_at timestamptz not null,
