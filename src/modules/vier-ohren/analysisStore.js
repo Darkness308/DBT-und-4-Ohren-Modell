@@ -164,9 +164,9 @@ function sanitizeEntry(raw) {
   if (!valid) return null
 
   return {
-    id: raw.id.slice(0, 80),
-    situationId: raw.situationId.slice(0, 80),
-    author: { id: raw.author.id.slice(0, 80), name: authorName },
+    id: raw.id,
+    situationId: raw.situationId,
+    author: { id: raw.author.id, name: authorName }
     role: raw.role,
     statement,
     context: cleanText(raw.context),
