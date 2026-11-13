@@ -91,8 +91,10 @@ begin
        or new.space_id <> old.space_id
        or new.author_id <> old.author_id
        or new.situation_id <> old.situation_id
-       or new.created_at <> old.created_at then
-      raise exception 'id, space_id, author_id, situation_id und created_at sind unveränderlich';
+       or new.created_at <> old.created_at
+       or new.statement <> old.statement
+       or new.context <> old.context then
+      raise exception 'id, space_id, author_id, situation_id, created_at, statement und context sind unveränderlich';
     end if;
     -- Nur ein echt neuerer Stand ersetzt den vorhandenen (wie mergeEntries
     -- in der App). Älter oder gleich alt: Zeile bleibt unverändert.

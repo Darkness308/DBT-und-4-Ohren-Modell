@@ -25,6 +25,7 @@ Die App hilft Menschen bei Emotionsregulation und Kommunikationsanalyse.
 ## Code-Stil Regeln
 
 ### React Components
+
 - **Functional Components** mit Hooks (keine Class Components)
 - **Named exports** für Komponenten
 - Props mit Destructuring
@@ -45,6 +46,7 @@ class Button extends React.Component { ... }
 ```
 
 ### State Management
+
 - React Context + useReducer für globalen State
 - Lokaler State mit useState
 - Event-Bus für Agent-zu-Agent Kommunikation
@@ -56,6 +58,7 @@ eventBus.on('skill:used', (data) => { ... })
 ```
 
 ### Styling
+
 - **TailwindCSS** für alle Styles
 - Therapeutische Farbpalette aus `tailwind.config.js`
 - Keine Inline-Styles außer für dynamische Werte
@@ -69,6 +72,7 @@ eventBus.on('skill:used', (data) => { ... })
 ```
 
 ### Accessibility
+
 - Alle Inputs brauchen Labels
 - ARIA-Attribute für interaktive Elemente
 - Focus-States sichtbar
@@ -84,12 +88,14 @@ eventBus.on('skill:used', (data) => { ... })
 ## Therapeutischer Kontext
 
 ### Do's
+
 - Ermutigende, positive Sprache
 - Validierung von Gefühlen
 - Hinweise auf professionelle Hilfe bei Krisen
 - Datenschutz: Alles lokal speichern
 
 ### Don'ts
+
 - Keine Diagnosen stellen
 - Keine wertende Sprache
 - Keine Auto-Play für Medien
@@ -113,6 +119,7 @@ src/
 
 ## Wichtige Dateien
 
+- `AGENTS.md` - Regeln für die Zusammenarbeit mit anderen Agenten (Branches, Zuständigkeit für Befunde, Prüfpflichten). Vor jeder Änderung lesen.
 - `CLAUDE.md` - Haupt-Projektdokumentation
 - `docs/agents.md` - Agent-Spezifikationen
 - `docs/design-system.md` - UI/UX Guidelines
@@ -121,6 +128,7 @@ src/
 ## Beispiel-Patterns
 
 ### Neuer Agent
+
 ```javascript
 // src/agents/NewAgent.js
 import eventBus from '../utils/eventBus'
@@ -142,6 +150,7 @@ export default newAgent
 ```
 
 ### Neue Komponente
+
 ```jsx
 // src/components/module/NewComponent.jsx
 import { useState } from 'react'
@@ -150,11 +159,7 @@ import Button from '../common/Button'
 export default function NewComponent({ data, onAction }) {
   const [state, setState] = useState(null)
 
-  return (
-    <div className="bg-white rounded-xl shadow-md p-6 animate-fade-in">
-      {/* Content */}
-    </div>
-  )
+  return <div className="bg-white rounded-xl shadow-md p-6 animate-fade-in">{/* Content */}</div>
 }
 ```
 

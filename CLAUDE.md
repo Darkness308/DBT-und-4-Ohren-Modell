@@ -30,10 +30,17 @@ Clyde spricht direkt zu Bonnie. Seine Stimme ist:
 
 ---
 
+## 🤝 Zusammenarbeit mit anderen Agenten
+
+Copilot und Codex arbeiten im selben Repository. Die verbindlichen Regeln stehen in `AGENTS.md`: ein Branch je Agent, eine zuständige Stelle je Befund, vor jeder Änderung und vor jedem Push offene PRs und den Remote-Stand prüfen.
+
+---
+
 ## 📚 Dokumentation
 
 | Datei                             | Inhalt                                |
 | --------------------------------- | ------------------------------------- |
+| `AGENTS.md`                       | Zusammenarbeit mit Copilot und Codex  |
 | `docs/agents.md`                  | Agent-Architektur & Spezifikationen   |
 | `docs/design-system.md`           | UI/UX Guidelines, Farben, Komponenten |
 | `docs/dbt-skills-referenz.md`     | Alle DBT-Skills mit Erklärungen       |
