@@ -85,8 +85,7 @@ begin
        or new.created_at <> old.created_at then
       raise exception 'id, space_id, author_id, situation_id und created_at sind unveränderlich';
     end if;
-    -- Ein älterer Stand überschreibt keinen neueren
-    if new.updated_at < old.updated_at then
+    if new.updated_at <= old.updated_at then
       return old;
     end if;
   end if;
