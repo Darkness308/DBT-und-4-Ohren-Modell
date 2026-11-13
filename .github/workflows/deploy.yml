@@ -73,6 +73,6 @@ jobs:
         env:
           PAGES_URL: ${{ steps.deployment.outputs.page_url }}
         run: |
-          html=$(curl --fail --location --silent --show-error --retry 10 --retry-connrefused --retry-delay 3 "$PAGES_URL")
+          html=$(curl --fail --location --silent --show-error --retry 10 --retry-connrefused --retry-all-errors --retry-delay 3 "$PAGES_URL")
           grep --fixed-strings --quiet '<title>DBT Skills & Vier-Ohren-Modell</title>' <<< "$html"
           grep --fixed-strings --quiet '<div id="root"></div>' <<< "$html"
