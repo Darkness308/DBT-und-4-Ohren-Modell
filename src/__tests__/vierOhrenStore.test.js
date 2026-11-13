@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   LEVELS,
   createEntry,
+  createTombstone,
   updateEntry,
   upsertEntry,
   removeEntry,
@@ -193,6 +194,62 @@ describe('mergeEntries', () => {
     const result = mergeEntries([mine], [foreignEdit], { ownerId: anna.id })
     expect(result.rejected).toBe(1)
     expect(result.entries).toEqual([mine])
+  })
+})
+
+describe('Löschvermerke', () => {
+  it('ein gelöschter eigener Eintrag kommt über eine ältere Export-Datei nicht zurück', () => {
+    const mine = createEntry(base, t0)
+    const oldExport = parseImport(JSON.stringify(buildExport([mine], ben, t1)))
+    const tombstones = [createTombstone(mine, t2)]
+    const result = mergeEntries([], oldExport.entries, {
+      ownerId: anna.id,
+      tombstones,
+      incomingTombstones: oldExport.deleted,
+    })
+    expect(result.entries).toEqual([])
+    expect(result.added).toBe(0)
+    expect(result.tombstones).toEqual(tombstones)
+  })
+
+  it('das Löschen erreicht das andere Gerät über den Export', () => {
+    const theirs = createEntry({ ...base, author: ben, role: 'receiver' }, t0)
+    const file = parseImport(
+      JSON.stringify(buildExport([], ben, t2, [createTombstone(theirs, t1)]))
+    )
+    const result = mergeEntries([theirs], file.entries, {
+      ownerId: anna.id,
+      incomingTombstones: file.deleted,
+    })
+    expect(result.removed).toBe(1)
+    expect(result.entries).toEqual([])
+    // und bleibt gelöscht, wenn später eine alte Datei kommt
+    const again = mergeEntries(result.entries, [theirs], {
+      ownerId: anna.id,
+      tombstones: result.tombstones,
+    })
+    expect(again.entries).toEqual([])
+  })
+
+  it('fremde Löschvermerke entfernen keine eigenen oder fremd zugeordneten Einträge', () => {
+    const mine = createEntry(base, t0)
+    const theirs = createEntry({ ...base, author: ben, role: 'receiver' }, t0)
+    const forged = [
+      { id: mine.id, authorId: anna.id, deletedAt: t1.toISOString() },
+      { id: theirs.id, authorId: 'jemand-anderes', deletedAt: t1.toISOString() },
+    ]
+    const result = mergeEntries([mine, theirs], [], {
+      ownerId: anna.id,
+      incomingTombstones: forged,
+    })
+    expect(result.removed).toBe(0)
+    expect(result.entries).toHaveLength(2)
+    expect(result.tombstones).toEqual([])
+  })
+
+  it('verwirft unlesbare Löschvermerke beim Import', () => {
+    const data = { ...buildExport([], anna, t0), deleted: [{ id: 1 }, null, 'x'] }
+    expect(parseImport(JSON.stringify(data)).deleted).toEqual([])
   })
 })
 

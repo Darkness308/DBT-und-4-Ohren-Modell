@@ -16,15 +16,18 @@ import {
   buildExport,
   createEntry,
   createProfile,
+  createTombstone,
   groupBySituation,
   loadEntries,
   loadProfile,
+  loadTombstones,
   mergeEntries,
   oppositeRole,
   parseImport,
   removeEntry,
   saveEntries,
   saveProfile,
+  saveTombstones,
   updateEntry,
   upsertEntry,
 } from './analysisStore'
@@ -34,6 +37,7 @@ import { surface, textMain, textSub, fieldClass } from './levelStyles'
 export default function VierOhrenAnalyzer() {
   const [profile, setProfile] = useState(loadProfile)
   const [entries, setEntries] = useState(loadEntries)
+  const [tombstones, setTombstones] = useState(loadTombstones)
   // view: { name: 'list' } | { name: 'form', situationId?, entryId? } | { name: 'detail', situationId }
   const [view, setView] = useState({ name: 'list' })
   const [message, setMessage] = useState('')
@@ -42,12 +46,16 @@ export default function VierOhrenAnalyzer() {
     saveEntries(entries)
   }, [entries])
 
+  useEffect(() => {
+    saveTombstones(tombstones)
+  }, [tombstones])
+
   const situations = useMemo(() => groupBySituation(entries), [entries])
   const activeSituation = situations.find((s) => s.situationId === view.situationId) || null
 
   const handleExport = async (list) => {
     const result = await shareOrDownloadJson(
-      buildExport(list, profile),
+      buildExport(list, profile, new Date(), tombstones),
       exportFilename(profile.name)
     )
     if (result !== 'cancelled') {
@@ -59,11 +67,17 @@ export default function VierOhrenAnalyzer() {
 
   const handleImportFile = async (file) => {
     try {
-      const { entries: incoming, skipped } = parseImport(await file.text())
-      const result = mergeEntries(entries, incoming, { ownerId: profile.id })
+      const { entries: incoming, skipped, deleted } = parseImport(await file.text())
+      const result = mergeEntries(entries, incoming, {
+        ownerId: profile.id,
+        tombstones,
+        incomingTombstones: deleted,
+      })
       setEntries(result.entries)
+      setTombstones(result.tombstones)
       setMessage(
         `Import fertig: ${result.added} neu, ${result.updated} aktualisiert, ${result.unchanged} unverändert` +
+          (result.removed ? `, ${result.removed} gelöscht (von der anderen Person entfernt)` : '') +
           (result.rejected
             ? `, ${result.rejected} abgelehnt (fremde Änderung an bestehendem Eintrag)`
             : '') +
@@ -95,6 +109,7 @@ export default function VierOhrenAnalyzer() {
     if (!window.confirm('Deine Sicht auf diese Situation löschen?')) return
     const remaining = removeEntry(entries, entry.id)
     setEntries(remaining)
+    setTombstones((prev) => [...prev, createTombstone(entry)])
     const stillExists = remaining.some((e) => e.situationId === entry.situationId)
     setView(stillExists ? { name: 'detail', situationId: entry.situationId } : { name: 'list' })
   }

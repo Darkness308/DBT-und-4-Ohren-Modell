@@ -20,6 +20,7 @@ export const EXPORT_APP_ID = 'ctmm-vier-ohren'
 export const SCHEMA_VERSION = 1
 
 const ENTRIES_KEY = 'vier-ohren-entries'
+const TOMBSTONES_KEY = 'vier-ohren-deleted'
 const PROFILE_KEY = 'vier-ohren-profile'
 const MAX_TEXT = 4000
 const MAX_NAME = 60
@@ -105,6 +106,15 @@ export function upsertEntry(entries, entry) {
   return exists ? entries.map((e) => (e.id === entry.id ? entry : e)) : [...entries, entry]
 }
 
+/**
+ * Löschvermerk für einen Eintrag. Er verhindert, dass ein gelöschter
+ * Eintrag über eine ältere Export-Datei zurückkommt, und gibt das Löschen
+ * an das andere Gerät weiter.
+ */
+export function createTombstone(entry, now = new Date()) {
+  return { id: entry.id, authorId: entry.author.id, deletedAt: now.toISOString() }
+}
+
 export function removeEntry(entries, id) {
   return entries.filter((e) => e.id !== id)
 }
@@ -142,13 +152,14 @@ export function oppositeRole(role) {
 }
 
 /** Export-Objekt bauen */
-export function buildExport(entries, profile, now = new Date()) {
+export function buildExport(entries, profile, now = new Date(), tombstones = []) {
   return {
     app: EXPORT_APP_ID,
     schema: SCHEMA_VERSION,
     exportedAt: now.toISOString(),
     exportedBy: profile ? { id: profile.id, name: profile.name } : null,
     entries,
+    deleted: tombstones,
   }
 }
 
@@ -216,29 +227,56 @@ export function parseImport(text) {
     else skipped++
   })
 
-  return { entries, skipped, exportedBy: data.exportedBy || null }
+  return {
+    entries,
+    skipped,
+    deleted: sanitizeTombstones(data.deleted),
+    exportedBy: data.exportedBy || null,
+  }
 }
 
 /**
  * Importierte Einträge mit den lokalen zusammenführen.
  *
- * - Neue ID: Eintrag wird übernommen.
+ * - Neue ID: Eintrag wird übernommen, außer es gibt einen Löschvermerk.
  * - Bekannte ID: nur ein neuerer Stand (updatedAt) ändert etwas, und dann
  *   nur Rolle und Antworten. Autor, Situation, Aussage, Kontext und
  *   createdAt bleiben wie lokal (wie in der App nicht änderbar).
  * - Mit ownerId: Einträge dieser Person werden durch einen Import nie
- *   geändert. Nur sie selbst bearbeitet ihre Sicht.
+ *   geändert oder gelöscht. Nur sie selbst bearbeitet ihre Sicht.
+ * - Löschvermerke: Eigene (tombstones) sperren die ID dauerhaft. Fremde
+ *   (incomingTombstones) entfernen den Eintrag nur, wenn er der Person
+ *   gehört, die den Vermerk ausgestellt hat.
  */
-export function mergeEntries(local, incoming, { ownerId = null } = {}) {
+export function mergeEntries(
+  local,
+  incoming,
+  { ownerId = null, tombstones = [], incomingTombstones = [] } = {}
+) {
   const byId = new Map(local.map((e) => [e.id, e]))
+  const deleted = new Map(tombstones.map((t) => [t.id, t]))
   let added = 0
   let updated = 0
   let unchanged = 0
   let rejected = 0
+  let removed = 0
+
+  incomingTombstones.forEach((tombstone) => {
+    if (deleted.has(tombstone.id) || (ownerId && tombstone.authorId === ownerId)) return
+    const existing = byId.get(tombstone.id)
+    if (existing && existing.author.id !== tombstone.authorId) return
+    if (existing) {
+      byId.delete(tombstone.id)
+      removed++
+    }
+    deleted.set(tombstone.id, tombstone)
+  })
 
   incoming.forEach((entry) => {
     const existing = byId.get(entry.id)
-    if (!existing) {
+    if (deleted.has(entry.id)) {
+      // gelöscht: kommt nicht zurück
+    } else if (!existing) {
       byId.set(entry.id, entry)
       added++
     } else if (entry.updatedAt <= existing.updatedAt) {
@@ -260,7 +298,28 @@ export function mergeEntries(local, incoming, { ownerId = null } = {}) {
     }
   })
 
-  return { entries: [...byId.values()], added, updated, unchanged, rejected }
+  return {
+    entries: [...byId.values()],
+    tombstones: [...deleted.values()],
+    added,
+    updated,
+    unchanged,
+    rejected,
+    removed,
+  }
+}
+
+/** Löschvermerke prüfen; Unlesbares wird verworfen */
+export function sanitizeTombstones(raw) {
+  if (!Array.isArray(raw)) return []
+  const isId = (value) => typeof value === 'string' && value.length > 0 && value.length <= MAX_ID
+  return raw
+    .filter((t) => t && isId(t.id) && isId(t.authorId) && isIsoDate(t.deletedAt))
+    .map((t) => ({
+      id: t.id,
+      authorId: t.authorId,
+      deletedAt: new Date(t.deletedAt).toISOString(),
+    }))
 }
 
 /** Rohdaten (z.B. aus einem Backup) prüfen; Unlesbares wird verworfen */
@@ -279,6 +338,14 @@ export function saveEntries(entries) {
   return saveToStorage(ENTRIES_KEY, entries)
 }
 
+export function loadTombstones() {
+  return sanitizeTombstones(loadFromStorage(TOMBSTONES_KEY, []))
+}
+
+export function saveTombstones(tombstones) {
+  return saveToStorage(TOMBSTONES_KEY, tombstones)
+}
+
 export function loadProfile() {
   const profile = loadFromStorage(PROFILE_KEY, null)
   return profile?.id && profile?.name ? profile : null
@@ -292,7 +359,7 @@ export function saveProfile(profile) {
 
 /** Vier-Ohren-Daten dieses Geräts für das vollständige Backup */
 export function getBackupData() {
-  return { entries: loadEntries(), profile: loadProfile() }
+  return { entries: loadEntries(), profile: loadProfile(), deleted: loadTombstones() }
 }
 
 /**
@@ -308,7 +375,11 @@ export function restoreBackupData(data) {
     if (name) saveProfile({ id: data.profile.id, name })
   }
 
-  const result = mergeEntries(loadEntries(), sanitizeEntries(data.entries))
+  // Eigenes Backup: Löschvermerke daraus gelten ohne Einschränkung
+  const result = mergeEntries(loadEntries(), sanitizeEntries(data.entries), {
+    tombstones: [...loadTombstones(), ...sanitizeTombstones(data.deleted)],
+  })
   saveEntries(result.entries)
+  saveTombstones(result.tombstones)
   return { added: result.added, updated: result.updated }
 }
