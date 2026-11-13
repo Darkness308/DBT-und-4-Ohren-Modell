@@ -235,7 +235,7 @@ Vulnerabilität → Auslöser → [Gedanke → Gefühl → Körper → Impuls]* 
 | `saveChain(chain)` | Chain speichern |
 | `findPatterns(chains)` | Muster über mehrere Chains erkennen |
 
-**Datei:** `src/agents/ChainAnalysisAgent.js`
+**Datei:** `src/modules/chain-analysis/ChainAnalysisAgent.js`
 
 ---
 
@@ -315,7 +315,7 @@ function matchSkills(situation) {
 }
 ```
 
-**Datei:** `src/agents/SkillFinderAgent.js`
+**Datei:** `src/modules/dbt-skills/SkillFinderAgent.js`
 
 ---
 
@@ -358,7 +358,7 @@ function matchSkills(situation) {
 }
 ```
 
-**Datei:** `src/agents/ImaginationAgent.js`
+**Datei:** geplant, noch nicht vorhanden (`ImaginationAgent`)
 
 ---
 
@@ -406,7 +406,7 @@ function matchSkills(situation) {
 - 📈 Skill-Nutzung (Bar Chart)
 - 🔥 Streak-Anzeige (Tage in Folge)
 
-**Datei:** `src/agents/DiaryCardAgent.js`
+**Datei:** `src/modules/diary-card/DiaryCardAgent.js`
 
 ---
 
@@ -421,7 +421,7 @@ function matchSkills(situation) {
 - Skill-Effektivität (z.B. "TIPP hilft bei Panik am besten")
 - Fortschritt (z.B. "Urges nehmen ab über Zeit")
 
-**Datei:** `src/agents/PatternRecognitionAgent.js`
+**Datei:** geplant, noch nicht vorhanden (`PatternRecognitionAgent`)
 
 ---
 

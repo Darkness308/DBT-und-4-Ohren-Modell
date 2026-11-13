@@ -1,5 +1,7 @@
 # Claude Code Prompt-Guide - DBT & Vier-Ohren App
 
+> **Stand-Hinweis:** Dieses Dokument ist eine ältere Momentaufnahme. Es nennt `VierOhrenAnalyzerAgent`, `AnalyzerForm.jsx` und `ResultDisplay.jsx`; diese Dateien gibt es nicht mehr. Das Vier-Ohren-Modul ist jetzt eine geführte Selbstanalyse, beschrieben in `docs/agents.md` (Abschnitt „Vier-Ohren: geführte Selbstanalyse").
+
 ## 🎯 Wie du diesen Guide nutzt
 
 1. Starte Claude Code im Projektverzeichnis: `claude`
@@ -12,8 +14,9 @@
 ## 🚀 Phase 1: Setup
 
 ### Prompt 1.1 – Projekt initialisieren
+
 ```
-Lies CLAUDE.md und alle Dateien in docs/. 
+Lies CLAUDE.md und alle Dateien in docs/.
 
 Dann:
 1. Erstelle die komplette Projektstruktur wie in CLAUDE.md beschrieben
@@ -27,6 +30,7 @@ Teste dass `npm run dev` funktioniert.
 ```
 
 ### Prompt 1.2 – Design-System implementieren
+
 ```
 Lies docs/design-system.md.
 
@@ -51,6 +55,7 @@ Jede Komponente soll:
 ## 📊 Phase 2: Kern-Module
 
 ### Prompt 2.1 – Vier-Ohren-Analyzer (Herzstück)
+
 ```
 Lies docs/agents.md Abschnitt "VierOhrenAnalyzerAgent".
 
@@ -78,6 +83,7 @@ Teste mit dem Ampel-Beispiel: "Die Ampel ist grün."
 ```
 
 ### Prompt 2.2 – Skill-Finder
+
 ```
 Lies docs/agents.md Abschnitt "SkillFinderAgent" und docs/dbt-skills-referenz.md.
 
@@ -111,6 +117,7 @@ Der Nutzer soll mit 3-4 Fragen zur passenden Skill-Empfehlung geführt werden.
 ```
 
 ### Prompt 2.3 – Chain Analysis Tool
+
 ```
 Lies docs/agents.md Abschnitt "ChainAnalysisAgent".
 
@@ -128,12 +135,12 @@ Implementiere die Verhaltenskettenanalyse:
      * Schritt-für-Schritt durch: Vulnerabilität → Auslöser → Kette → Konsequenzen
      * Dynamisches Hinzufügen von Kettengliedern (Gedanke/Gefühl/Körper/Impuls/Verhalten)
      * Intensitäts-Slider für jedes Glied
-   
+
    - ChainVisualization.jsx - Visuelle Darstellung der Kette
      * Horizontale Timeline mit verbundenen Knoten
      * Farbkodierung nach Typ (Gedanke=blau, Gefühl=rosa, etc.)
      * Klickbare Knoten für Details
-   
+
    - InterventionSuggestions.jsx - Skill-Vorschläge pro Kettenglied
      * Automatische Vorschläge basierend auf Kettenglied-Typ
      * "Was hätte ich stattdessen tun können?"
@@ -148,6 +155,7 @@ Die UI soll empathisch und nicht-wertend sein. Nutze ermutigende Sprache.
 ## 📈 Phase 3: Tracking
 
 ### Prompt 3.1 – Digitale Diary Card
+
 ```
 Lies docs/agents.md Abschnitt "DiaryCardAgent".
 
@@ -172,11 +180,11 @@ Implementiere die Diary Card:
      * Urge-Tracker
      * Skill-Verwendung (Multi-Select aus genutzten Skills)
      * Schlaf, Medikamente, Notizen
-   
+
    - EmotionSlider.jsx - Wiederverwendbarer Intensitäts-Slider
      * 0-5 Skala mit Emoji-Feedback
      * Farbverlauf basierend auf Intensität
-   
+
    - WeeklyChart.jsx - Wochenübersicht mit Recharts
      * Liniendiagramm für Emotionsverlauf
      * Skill-Nutzung als Balkendiagramm
@@ -188,6 +196,7 @@ Die Eingabe soll schnell und einfach sein - maximal 2-3 Minuten pro Tag.
 ```
 
 ### Prompt 3.2 – Muster-Erkennung
+
 ```
 Lies docs/agents.md Abschnitt "PatternRecognitionAgent".
 
@@ -223,6 +232,7 @@ Formuliere Muster positiv und ermutigend, nicht alarmierend.
 ## 🧘 Phase 4: Übungen
 
 ### Prompt 4.1 – Imaginationsübungen
+
 ```
 Lies docs/agents.md Abschnitt "ImaginationAgent".
 
@@ -253,7 +263,7 @@ Implementiere Imaginationsübungen:
      * Kreisförmiger Fortschritts-Timer
      * Aktueller Text-Abschnitt (sanft eingeblendet)
      * Optional: Text-to-Speech mit Web Speech API
-   
+
    - ExerciseList.jsx - Übersicht aller Übungen
    - CompletionScreen.jsx - Sanfter Abschluss mit Reflexionsfrage
 
@@ -265,6 +275,7 @@ Implementiere Imaginationsübungen:
 ```
 
 ### Prompt 4.2 – DEAR MAN Trainer
+
 ```
 Implementiere einen interaktiven DEAR MAN Kommunikations-Trainer:
 
@@ -301,6 +312,7 @@ Implementiere einen interaktiven DEAR MAN Kommunikations-Trainer:
 ## 🔧 Phase 5: Polish
 
 ### Prompt 5.1 – Onboarding
+
 ```
 Erstelle einen sanften Onboarding-Flow für neue Nutzer:
 
@@ -322,6 +334,7 @@ Erstelle einen sanften Onboarding-Flow für neue Nutzer:
 ```
 
 ### Prompt 5.2 – Accessibility Audit
+
 ```
 Führe einen Accessibility-Audit durch und behebe Probleme:
 
@@ -346,6 +359,7 @@ Führe einen Accessibility-Audit durch und behebe Probleme:
 ```
 
 ### Prompt 5.3 – PWA Setup
+
 ```
 Mache die App zu einer Progressive Web App:
 
@@ -375,6 +389,7 @@ Mache die App zu einer Progressive Web App:
 ## 🐛 Debugging & Fixes
 
 ### Prompt D.1 – Fehler beheben
+
 ```
 Ich habe folgenden Fehler:
 
@@ -385,6 +400,7 @@ Erkläre kurz was das Problem war.
 ```
 
 ### Prompt D.2 – Performance optimieren
+
 ```
 Die App fühlt sich langsam an bei [BESCHREIBUNG].
 
@@ -398,6 +414,7 @@ Zeige vorher/nachher Verbesserungen.
 ```
 
 ### Prompt D.3 – Code Review
+
 ```
 Führe ein Code Review durch für [DATEI ODER MODUL].
 

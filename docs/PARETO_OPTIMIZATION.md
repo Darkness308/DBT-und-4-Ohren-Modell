@@ -1,4 +1,7 @@
 # Pareto-Optimierung: 80/20 und 85/15 Strategien
+
+> **Stand-Hinweis:** Dieses Dokument ist eine ältere Momentaufnahme. Es nennt `VierOhrenAnalyzerAgent`, `AnalyzerForm.jsx` und `ResultDisplay.jsx`; diese Dateien gibt es nicht mehr. Das Vier-Ohren-Modul ist jetzt eine geführte Selbstanalyse, beschrieben in `docs/agents.md` (Abschnitt „Vier-Ohren: geführte Selbstanalyse").
+
 ## DBT Skills & Vier-Ohren-Modell Web-App
 
 **Analysedatum:** 2025-12-29
@@ -23,6 +26,7 @@
 Zwei neue Slash-Commands wurden erstellt in `.claude/commands/`:
 
 #### `/analyze-quality [bereich]`
+
 Multi-Dimensionen-Qualitätsanalyse für beliebige Komponenten.
 
 ```bash
@@ -35,6 +39,7 @@ Multi-Dimensionen-Qualitätsanalyse für beliebige Komponenten.
 **Ausgabe:** 10-Dimensionen-Bewertung mit Pareto-Empfehlungen
 
 #### `/pareto-optimize [fokus]`
+
 Pareto-Analyse mit Web-Recherche für moderne Lösungen.
 
 ```bash
@@ -52,19 +57,20 @@ Pareto-Analyse mit Web-Recherche für moderne Lösungen.
 
 ### Quick Wins (< 1 Stunde, 80% Impact)
 
-| # | Maßnahme | Aufwand | Impact | Datei |
-|---|----------|---------|--------|-------|
-| 1 | **React.lazy + Suspense** | 15 min | -40% Bundle | `App.jsx` |
-| 2 | **localStorage Debouncing** | 20 min | -90% Writes | `App.jsx` |
-| 3 | **aria-live auf ResultDisplay** | 10 min | WCAG AA | `ResultDisplay.jsx` |
-| 4 | **Skip-Link hinzufügen** | 10 min | A11y | `App.jsx` |
-| 5 | **setTimeout Cleanup** | 30 min | Memory Leak Fix | 4 Dateien |
+| #   | Maßnahme                        | Aufwand | Impact          | Datei               |
+| --- | ------------------------------- | ------- | --------------- | ------------------- |
+| 1   | **React.lazy + Suspense**       | 15 min  | -40% Bundle     | `App.jsx`           |
+| 2   | **localStorage Debouncing**     | 20 min  | -90% Writes     | `App.jsx`           |
+| 3   | **aria-live auf ResultDisplay** | 10 min  | WCAG AA         | `ResultDisplay.jsx` |
+| 4   | **Skip-Link hinzufügen**        | 10 min  | A11y            | `App.jsx`           |
+| 5   | **setTimeout Cleanup**          | 30 min  | Memory Leak Fix | 4 Dateien           |
 
 ---
 
 ### Quick Win #1: Code-Splitting mit React.lazy
 
 **Vorher (App.jsx:6-10):**
+
 ```javascript
 import VierOhrenAnalyzer from './components/vier-ohren/VierOhrenAnalyzer'
 import SkillFinder from './components/skill-finder/SkillFinder'
@@ -73,6 +79,7 @@ import Settings from './components/settings/Settings'
 ```
 
 **Nachher:**
+
 ```javascript
 import { lazy, Suspense } from 'react'
 
@@ -83,15 +90,12 @@ const Settings = lazy(() => import('./components/settings/Settings'))
 
 // In renderModule():
 const renderModule = () => {
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      {/* ... */}
-    </Suspense>
-  )
+  return <Suspense fallback={<LoadingSpinner />}>{/* ... */}</Suspense>
 }
 ```
 
 **Impact:**
+
 - Initial Bundle: -40% (von ~250KB auf ~150KB)
 - Time to Interactive: -30%
 
@@ -102,13 +106,15 @@ const renderModule = () => {
 ### Quick Win #2: localStorage Debouncing
 
 **Vorher (App.jsx:69-71):**
+
 ```javascript
 useEffect(() => {
   localStorage.setItem('dbt-app-state', JSON.stringify(state))
-}, [state])  // Bei JEDER State-Änderung!
+}, [state]) // Bei JEDER State-Änderung!
 ```
 
 **Nachher:**
+
 ```javascript
 import { useMemo, useEffect, useRef } from 'react'
 
@@ -133,6 +139,7 @@ useDebouncedPersist(state, 1000)
 ```
 
 **Impact:**
+
 - localStorage Writes: -90%
 - JSON.stringify Calls: -90%
 - UI Responsiveness: +20%
@@ -142,12 +149,14 @@ useDebouncedPersist(state, 1000)
 ### Quick Win #3: aria-live für Analyseergebnisse
 
 **Vorher (ResultDisplay.jsx:18-19):**
+
 ```jsx
 return (
   <div className="space-y-4 animate-fade-in">
 ```
 
 **Nachher:**
+
 ```jsx
 return (
   <div
@@ -167,6 +176,7 @@ return (
 ### Quick Win #4: Skip-Link
 
 **Hinzufügen in App.jsx nach `<AppContext.Provider>`:**
+
 ```jsx
 {/* Skip-Link für Keyboard-Navigation */}
 <a
@@ -190,6 +200,7 @@ return (
 ### Quick Win #5: setTimeout Cleanup
 
 **Vorher (VierOhrenAnalyzer.jsx:19-36):**
+
 ```javascript
 const handleAnalyze = () => {
   if (!statement.trim()) return
@@ -204,6 +215,7 @@ const handleAnalyze = () => {
 ```
 
 **Nachher:**
+
 ```javascript
 const handleAnalyze = useCallback(() => {
   if (!statement.trim()) return
@@ -238,6 +250,7 @@ function useDelayedAction(action, delay) {
 ```
 
 **Betroffene Dateien:**
+
 - `VierOhrenAnalyzer.jsx:25-35`
 - `SkillFinder.jsx:28-36`
 - `DataManagement.jsx:45-48`
@@ -275,17 +288,22 @@ export const useAppStore = create(
 
         // Actions
         navigate: (module) => set({ activeModule: module }),
-        addDiaryEntry: (entry) => set((state) => ({
-          diaryData: [...state.diaryData, entry]
-        })),
-        addSkillUsage: (usage) => set((state) => ({
-          skillHistory: [...state.skillHistory, {
-            ...usage,
-            timestamp: new Date().toISOString()
-          }]
-        })),
+        addDiaryEntry: (entry) =>
+          set((state) => ({
+            diaryData: [...state.diaryData, entry],
+          })),
+        addSkillUsage: (usage) =>
+          set((state) => ({
+            skillHistory: [
+              ...state.skillHistory,
+              {
+                ...usage,
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          })),
       }),
-      { name: 'dbt-app-state' }  // Automatische localStorage Persistenz!
+      { name: 'dbt-app-state' } // Automatische localStorage Persistenz!
     )
   )
 )
@@ -299,6 +317,7 @@ function Dashboard() {
 ```
 
 **Vorteile:**
+
 - Automatische localStorage Persistenz (kein manuelles useEffect)
 - DevTools Integration
 - Selektives Re-Rendering (nur was sich ändert)
@@ -324,13 +343,11 @@ npm install @radix-ui/react-dialog @radix-ui/react-slider @radix-ui/react-tabs
 import * as Slider from '@radix-ui/react-slider'
 
 export function IntensitySlider({ value, onChange, levels }) {
-  const currentLevel = levels.find(l => l.value === value)
+  const currentLevel = levels.find((l) => l.value === value)
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium">
-        Intensität: {currentLevel.label}
-      </label>
+      <label className="text-sm font-medium">Intensität: {currentLevel.label}</label>
 
       <Slider.Root
         className="relative flex items-center select-none touch-none w-full h-5"
@@ -355,6 +372,7 @@ export function IntensitySlider({ value, onChange, levels }) {
 ```
 
 **Vorteile:**
+
 - WAI-ARIA konform out-of-the-box
 - Keyboard Navigation automatisch
 - Focus Management automatisch
@@ -384,7 +402,7 @@ db.version(1).stores({
   diaryEntries: '++id, date, mood, *skillsUsed',
   chainAnalyses: '++id, date, trigger, behavior',
   skillUsage: '++id, skillId, timestamp, effectiveness',
-  settings: 'key'
+  settings: 'key',
 })
 
 // React Hook für Live-Queries
@@ -392,8 +410,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 
 function DiaryHistory() {
   // Automatisch reaktiv bei Datenänderung!
-  const entries = useLiveQuery(
-    () => db.diaryEntries
+  const entries = useLiveQuery(() =>
+    db.diaryEntries
       .where('date')
       .above(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
       .reverse()
@@ -402,8 +420,10 @@ function DiaryHistory() {
 
   return (
     <ul>
-      {entries?.map(entry => (
-        <li key={entry.id}>{entry.date}: {entry.mood}/5</li>
+      {entries?.map((entry) => (
+        <li key={entry.id}>
+          {entry.date}: {entry.mood}/5
+        </li>
       ))}
     </ul>
   )
@@ -411,6 +431,7 @@ function DiaryHistory() {
 ```
 
 **Vorteile:**
+
 - Unbegrenzter Speicher (im Gegensatz zu localStorage 5MB)
 - Queries, Indexes, Joins
 - Automatische Reaktivität mit `useLiveQuery`
@@ -450,8 +471,8 @@ export default defineConfig({
             handler: 'CacheFirst',
             options: {
               cacheName: 'google-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 }
-            }
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            },
           },
           // Stale-While-Revalidate für API
           {
@@ -459,10 +480,10 @@ export default defineConfig({
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'api-cache',
-              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 }
-            }
-          }
-        ]
+              expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
+        ],
       },
       manifest: {
         name: 'DBT Skills & Vier-Ohren',
@@ -471,15 +492,16 @@ export default defineConfig({
         background_color: '#f9fafb',
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
-        ]
-      }
-    })
-  ]
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+        ],
+      },
+    }),
+  ],
 })
 ```
 
 **Vorteile:**
+
 - Automatische Precaching
 - Differenzierte Runtime-Strategien
 - Automatische Updates
@@ -541,6 +563,7 @@ npx biome init
 ```
 
 **Vorteile:**
+
 - 10-25x schneller als ESLint + Prettier
 - Ein Tool statt drei (ESLint + Prettier + eslint-config-prettier)
 - Eine Config-Datei
@@ -569,7 +592,7 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/test/setup.js',
     css: true,
-  }
+  },
 })
 
 // src/test/setup.js
@@ -591,9 +614,7 @@ import VierOhrenAnalyzer from '../VierOhrenAnalyzer'
 import { ThemeProvider } from '../../../contexts/ThemeContext'
 
 const renderWithProviders = (ui) => {
-  return render(
-    <ThemeProvider>{ui}</ThemeProvider>
-  )
+  return render(<ThemeProvider>{ui}</ThemeProvider>)
 }
 
 describe('VierOhrenAnalyzer', () => {
@@ -623,7 +644,7 @@ describe('VierOhrenAnalyzer', () => {
 
     // Alle interaktiven Elemente haben accessible names
     const buttons = screen.getAllByRole('button')
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       expect(button).toHaveAccessibleName()
     })
   })
@@ -631,6 +652,7 @@ describe('VierOhrenAnalyzer', () => {
 ```
 
 **Vorteile:**
+
 - Native ESM (wie Vite)
 - Watch-Mode mit HMR
 - Built-in Coverage
@@ -674,6 +696,7 @@ describe('Accessibility', () => {
 ```
 
 **Vorteile:**
+
 - 57% der WCAG Issues automatisch erkannt
 - Zero false positives
 - CI/CD Integration
@@ -686,44 +709,44 @@ describe('Accessibility', () => {
 
 ### Performance
 
-| Tool | Zweck | Bundle | Aufwand |
-|------|-------|--------|---------|
-| React.lazy | Code-Splitting | 0 KB | 15 min |
-| [Zustand](https://github.com/pmndrs/zustand) | State Management | ~1 KB | 2h |
-| [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | PWA + Workbox | ~10 KB | 1h |
-| [Partytown](https://partytown.builder.io/) | Web Worker für 3rd-Party | 0 KB runtime | 30 min |
+| Tool                                                 | Zweck                    | Bundle       | Aufwand |
+| ---------------------------------------------------- | ------------------------ | ------------ | ------- |
+| React.lazy                                           | Code-Splitting           | 0 KB         | 15 min  |
+| [Zustand](https://github.com/pmndrs/zustand)         | State Management         | ~1 KB        | 2h      |
+| [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | PWA + Workbox            | ~10 KB       | 1h      |
+| [Partytown](https://partytown.builder.io/)           | Web Worker für 3rd-Party | 0 KB runtime | 30 min  |
 
 ### Barrierefreiheit
 
-| Tool | Zweck | Bundle | Aufwand |
-|------|-------|--------|---------|
-| [Radix UI](https://www.radix-ui.com/) | Headless A11y Primitives | je ~3-5 KB | 4h |
-| [axe-core](https://github.com/dequelabs/axe-core) | Automated A11y Testing | Dev only | 1h |
-| [eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y) | Static A11y Linting | Dev only | 15 min |
+| Tool                                                                           | Zweck                    | Bundle     | Aufwand |
+| ------------------------------------------------------------------------------ | ------------------------ | ---------- | ------- |
+| [Radix UI](https://www.radix-ui.com/)                                          | Headless A11y Primitives | je ~3-5 KB | 4h      |
+| [axe-core](https://github.com/dequelabs/axe-core)                              | Automated A11y Testing   | Dev only   | 1h      |
+| [eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y) | Static A11y Linting      | Dev only   | 15 min  |
 
 ### Developer Experience
 
-| Tool | Zweck | Aufwand | Benefit |
-|------|-------|---------|---------|
-| [Biome](https://biomejs.dev/) | Linting + Formatting | 1h | 20x schneller |
-| [Vitest](https://vitest.dev/) | Unit/Component Tests | 2h | Native ESM, HMR |
-| TypeScript | Type Safety | 8h+ | Langzeit-Wartung |
+| Tool                          | Zweck                | Aufwand | Benefit          |
+| ----------------------------- | -------------------- | ------- | ---------------- |
+| [Biome](https://biomejs.dev/) | Linting + Formatting | 1h      | 20x schneller    |
+| [Vitest](https://vitest.dev/) | Unit/Component Tests | 2h      | Native ESM, HMR  |
+| TypeScript                    | Type Safety          | 8h+     | Langzeit-Wartung |
 
 ### Offline/PWA
 
-| Tool | Zweck | Aufwand |
-|------|-------|---------|
-| [Dexie.js](https://dexie.org/) | IndexedDB Wrapper | 3h |
-| [Workbox](https://developer.chrome.com/docs/workbox/) | Service Worker | 2h |
-| [idb](https://github.com/jakearchibald/idb) | Lightweight IndexedDB | 1h |
+| Tool                                                  | Zweck                 | Aufwand |
+| ----------------------------------------------------- | --------------------- | ------- |
+| [Dexie.js](https://dexie.org/)                        | IndexedDB Wrapper     | 3h      |
+| [Workbox](https://developer.chrome.com/docs/workbox/) | Service Worker        | 2h      |
+| [idb](https://github.com/jakearchibald/idb)           | Lightweight IndexedDB | 1h      |
 
 ### Therapie-spezifisch
 
-| Tool | Zweck | Aufwand |
-|------|-------|---------|
-| [Recharts](https://recharts.org/) | Charts (bereits integriert) | - |
-| [Tone.js](https://tonejs.github.io/) | Audio für Imaginationsübungen | 4h |
-| [crypto-js](https://www.npmjs.com/package/crypto-js) | Client-side Encryption | 2h |
+| Tool                                                 | Zweck                         | Aufwand |
+| ---------------------------------------------------- | ----------------------------- | ------- |
+| [Recharts](https://recharts.org/)                    | Charts (bereits integriert)   | -       |
+| [Tone.js](https://tonejs.github.io/)                 | Audio für Imaginationsübungen | 4h      |
+| [crypto-js](https://www.npmjs.com/package/crypto-js) | Client-side Encryption        | 2h      |
 
 ---
 
@@ -781,25 +804,25 @@ Tag 8-10:
 
 ### 80/20 Quick Wins (5 Stunden Aufwand)
 
-| # | Maßnahme | Impact |
-|---|----------|--------|
-| 1 | Code-Splitting | -40% Bundle |
-| 2 | Debounced Persist | -90% Writes |
-| 3 | aria-live | WCAG AA |
-| 4 | Skip-Link | A11y |
-| 5 | Timeout Cleanup | Memory Leak Fix |
+| #   | Maßnahme          | Impact          |
+| --- | ----------------- | --------------- |
+| 1   | Code-Splitting    | -40% Bundle     |
+| 2   | Debounced Persist | -90% Writes     |
+| 3   | aria-live         | WCAG AA         |
+| 4   | Skip-Link         | A11y            |
+| 5   | Timeout Cleanup   | Memory Leak Fix |
 
 ### 85/15 Expansive (20 Stunden Aufwand)
 
-| # | Tool | Impact |
-|---|------|--------|
-| 1 | Zustand | Sauberer State, Auto-Persist |
-| 2 | Radix UI | Vollständige A11y |
-| 3 | Dexie.js | Offline-First, Unbegrenzt |
-| 4 | Workbox | PWA-Optimierung |
-| 5 | Biome | 20x schneller Linting |
-| 6 | Vitest | Echte Tests |
-| 7 | axe-core | A11y-Automation |
+| #   | Tool     | Impact                       |
+| --- | -------- | ---------------------------- |
+| 1   | Zustand  | Sauberer State, Auto-Persist |
+| 2   | Radix UI | Vollständige A11y            |
+| 3   | Dexie.js | Offline-First, Unbegrenzt    |
+| 4   | Workbox  | PWA-Optimierung              |
+| 5   | Biome    | 20x schneller Linting        |
+| 6   | Vitest   | Echte Tests                  |
+| 7   | axe-core | A11y-Automation              |
 
 ---
 
@@ -816,4 +839,4 @@ Tag 8-10:
 
 ---
 
-*Erstellt mit Claude Code (Opus 4.5) am 2025-12-29*
+_Erstellt mit Claude Code (Opus 4.5) am 2025-12-29_
