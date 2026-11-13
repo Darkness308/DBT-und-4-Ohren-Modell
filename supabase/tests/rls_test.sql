@@ -67,6 +67,8 @@ select vo_test.expect((select statement from public.vier_ohren_entries where id 
 select vo_test.expect_error(format($$insert into public.vier_ohren_entries (id, space_id, situation_id, author_id, role, statement, created_at, updated_at) values (gen_random_uuid(), %L, gen_random_uuid(), %L, 'sender', 'x', now(), now())$$, :'space', :'anna'), 'Ben kann nicht in Annas Namen schreiben');
 select vo_test.expect_error(format($$delete from public.vier_ohren_entries where id = %L$$, :'e2'), 'Hartes Löschen ist gesperrt');
 select vo_test.expect_error(format($$update public.vier_ohren_entries set situation_id = gen_random_uuid(), updated_at = now() where id = %L$$, :'e2'), 'situation_id ist unveränderlich');
+select vo_test.expect_error(format($$update public.vier_ohren_entries set statement = 'umgeschrieben', updated_at = now() where id = %L$$, :'e2'), 'statement ist unveränderlich');
+select vo_test.expect_error(format($$update public.vier_ohren_entries set context = 'umgeschrieben', updated_at = now() where id = %L$$, :'e2'), 'context ist unveränderlich');
 
 -- Neuerer Stand bleibt; Löschmarkierung erreicht die andere Person
 update public.vier_ohren_entries set levels = '{"sachebene":"neu"}', updated_at = '2026-01-03T00:00Z' where id = :'e2';
