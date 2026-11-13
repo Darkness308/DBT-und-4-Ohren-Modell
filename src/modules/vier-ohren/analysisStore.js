@@ -23,6 +23,7 @@ const ENTRIES_KEY = 'vier-ohren-entries'
 const PROFILE_KEY = 'vier-ohren-profile'
 const MAX_TEXT = 4000
 const MAX_NAME = 60
+const MAX_ID = 80
 
 /** Eindeutige ID (UUID wenn verfügbar) */
 export function newId() {
@@ -148,13 +149,12 @@ function sanitizeEntry(raw) {
   if (!raw || typeof raw !== 'object') return null
   const statement = cleanText(raw.statement)
   const authorName = cleanText(raw.author?.name, MAX_NAME)
+  // IDs werden nie gekürzt: zu lange IDs könnten sonst zusammenfallen
+  const isId = (value) => typeof value === 'string' && value.length > 0 && value.length <= MAX_ID
   const valid =
-    typeof raw.id === 'string' &&
-    raw.id &&
-    typeof raw.situationId === 'string' &&
-    raw.situationId &&
-    typeof raw.author?.id === 'string' &&
-    raw.author.id &&
+    isId(raw.id) &&
+    isId(raw.situationId) &&
+    isId(raw.author?.id) &&
     authorName &&
     ROLES.includes(raw.role) &&
     statement &&
@@ -164,9 +164,9 @@ function sanitizeEntry(raw) {
   if (!valid) return null
 
   return {
-    id: raw.id.slice(0, 80),
-    situationId: raw.situationId.slice(0, 80),
-    author: { id: raw.author.id.slice(0, 80), name: authorName },
+    id: raw.id,
+    situationId: raw.situationId,
+    author: { id: raw.author.id, name: authorName },
     role: raw.role,
     statement,
     context: cleanText(raw.context),

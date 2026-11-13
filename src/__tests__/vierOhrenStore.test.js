@@ -124,6 +124,15 @@ describe('Export / Import', () => {
     expect(result.entries[0]).not.toHaveProperty('fremd')
     expect(result.skipped).toBe(1)
   })
+  it('überspringt Einträge mit überlangen IDs, statt sie zu kürzen', () => {
+    const prefix = 'x'.repeat(80)
+    const a = { ...createEntry(base, t0), id: `${prefix}-a` }
+    const b = { ...createEntry(base, t0), id: `${prefix}-b` }
+    const ok = { ...createEntry(base, t0), id: prefix }
+    const result = parseImport(JSON.stringify(buildExport([a, b, ok], anna, t1)))
+    expect(result.entries.map((e) => e.id)).toEqual([prefix])
+    expect(result.skipped).toBe(2)
+  })
 })
 
 describe('mergeEntries', () => {

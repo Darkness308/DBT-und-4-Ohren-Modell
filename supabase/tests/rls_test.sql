@@ -72,6 +72,8 @@ select vo_test.expect_error(format($$update public.vier_ohren_entries set situat
 update public.vier_ohren_entries set levels = '{"sachebene":"neu"}', updated_at = '2026-01-03T00:00Z' where id = :'e2';
 update public.vier_ohren_entries set levels = '{"sachebene":"alt"}', updated_at = '2026-01-02T00:00Z' where id = :'e2';
 select vo_test.expect((select levels->>'sachebene' from public.vier_ohren_entries where id = :'e2') = 'neu', 'Älterer Stand überschreibt keinen neueren');
+update public.vier_ohren_entries set levels = '{"sachebene":"gleich alt"}', updated_at = '2026-01-03T00:00Z' where id = :'e2';
+select vo_test.expect((select levels->>'sachebene' from public.vier_ohren_entries where id = :'e2') = 'neu', 'Gleich alter Stand überschreibt nicht');
 update public.vier_ohren_entries set deleted_at = now(), updated_at = now() where id = :'e2';
 select set_config('request.jwt.claim.sub', :'anna', false);
 select vo_test.expect((select deleted_at is not null from public.vier_ohren_entries where id = :'e2'), 'Anna sieht Bens Löschmarkierung');
